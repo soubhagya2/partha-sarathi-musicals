@@ -1,0 +1,37 @@
+# ==============================================================================
+# Google Cloud Ignore (Optimized for Backend Deployment)
+# ==============================================================================
+
+# Git Metadata
+.git
+.gitignore
+
+# Monorepo: Ignore frontend source when deploying the backend to keep upload small
+parthasarathi-client/
+
+# Dependencies
+# These are installed on the server during deployment to keep the upload small
+node_modules/
+
+# Environment and Secrets
+.env
+.env.*
+service-account.json
+google-cloud-key.json
+*.key
+*.pem
+
+# Documentation and Logs
+*.md
+LICENSE
+CONTRIBUTING
+npm-debug.log*
+yarn-error.log*
+
+# Build and IDEs
+dist/
+build/
+.cache/
+.next/
+.vscode/
+.idea/

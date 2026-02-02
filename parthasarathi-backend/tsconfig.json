@@ -1,0 +1,33 @@
+{
+  "compilerOptions": {
+    // Target modern JS
+    "target": "ES2022",
+
+    // Node.js module system
+    "module": "ESNext",
+    "moduleResolution": "node",
+
+    // Where compiled JS will go
+    "outDir": "./dist",
+    "rootDir": "./src",
+
+    // Enable ES module interop
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+
+    // Strict TypeScript checks
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "skipLibCheck": true,
+
+    // Source maps for debugging
+    "sourceMap": true,
+
+    // Declaration files for TS modules
+    "declaration": true,
+    "declarationMap": true
+  },
+  "include": ["src/**/*.ts", "src/server.ts"],
+  "exclude": ["node_modules", "dist"]
+}
