@@ -1,29 +1,27 @@
+import { useState, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
+import { adminService } from "../services/adminService";
+import { toast } from "sonner";
 
 export default function AdminSupport() {
-  const tickets = [
-    {
-      id: "T-1001",
-      user: "Amit Kumar",
-      subject: "Shipping Delay",
-      status: "Open",
-      date: "2023-10-25",
-    },
-    {
-      id: "T-1002",
-      user: "Sriya Das",
-      subject: "Refund Request",
-      status: "Resolved",
-      date: "2023-10-24",
-    },
-    {
-      id: "T-1003",
-      user: "Rahul Sen",
-      subject: "Product Inquiry",
-      status: "Pending",
-      date: "2023-10-23",
-    },
-  ];
+  const [tickets, setTickets] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchTickets = async () => {
+      try {
+        const data = await adminService.getTickets();
+        setTickets(data);
+      } catch (error) {
+        console.error("Failed to fetch tickets:", error);
+        toast.error("Failed to load support tickets");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTickets();
+  }, []);
 
   return (
     <div className="p-8">
@@ -56,40 +54,62 @@ export default function AdminSupport() {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
-            {tickets.map((ticket) => (
-              <tr key={ticket.id} className="hover:bg-gray-50">
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                  {ticket.id}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                  {ticket.user}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                  {ticket.subject}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <span
-                    className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                      ticket.status === "Open"
-                        ? "bg-green-100 text-green-800"
-                        : ticket.status === "Pending"
-                          ? "bg-yellow-100 text-yellow-800"
-                          : "bg-gray-100 text-gray-800"
-                    }`}
-                  >
-                    {ticket.status}
-                  </span>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {ticket.date}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                  <button className="text-blue-600 hover:text-blue-900">
-                    View Details
-                  </button>
+            {loading ? (
+              <tr>
+                <td
+                  colSpan={6}
+                  className="px-6 py-4 text-center text-sm text-gray-500"
+                >
+                  Loading tickets...
                 </td>
               </tr>
-            ))}
+            ) : tickets.length === 0 ? (
+              <tr>
+                <td
+                  colSpan={6}
+                  className="px-6 py-4 text-center text-sm text-gray-500"
+                >
+                  No tickets found.
+                </td>
+              </tr>
+            ) : (
+              tickets.map((ticket) => (
+                <tr key={ticket._id || ticket.id} className="hover:bg-gray-50">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                    {ticket._id || ticket.id}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                    {ticket.user?.name || ticket.user}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                    {ticket.subject}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span
+                      className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                        ticket.status === "Open"
+                          ? "bg-green-100 text-green-800"
+                          : ticket.status === "Pending"
+                            ? "bg-yellow-100 text-yellow-800"
+                            : "bg-gray-100 text-gray-800"
+                      }`}
+                    >
+                      {ticket.status}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {new Date(
+                      ticket.createdAt || ticket.date,
+                    ).toLocaleDateString()}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <button className="text-blue-600 hover:text-blue-900">
+                      View Details
+                    </button>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>

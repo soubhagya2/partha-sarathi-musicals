@@ -162,14 +162,6 @@ const Header = () => {
                       <ShieldCheck className="h-4 w-4" /> Admin Portal
                     </Link>
                   </li>
-                  <li>
-                    <Link
-                      to="/super-admin/login"
-                      className="flex items-center gap-3 px-3 py-2 text-sm font-ui font-medium text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                    >
-                      <ShieldAlert className="h-4 w-4" /> Super Admin
-                    </Link>
-                  </li>
                 </ul>
               </div>
             </div>

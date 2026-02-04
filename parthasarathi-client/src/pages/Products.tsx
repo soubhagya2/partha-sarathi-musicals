@@ -5,6 +5,8 @@ import Footer from "../components/layout/Footer";
 import Breadcrumbs from "../components/layout/Breadcrumbs";
 import ProductCard from "../components/layout/ProductCard";
 import { ChevronDown } from "lucide-react";
+import { adminService } from "../services/adminService";
+import { toast } from "sonner";
 
 const Products = () => {
   const [searchParams] = useSearchParams();
@@ -12,6 +14,8 @@ const Products = () => {
 
   const [selectedFilter, setSelectedFilter] = useState(categoryParam || "All");
   const [sortBy, setSortBy] = useState("Featured");
+  const [allProducts, setAllProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (categoryParam) {
@@ -19,132 +23,21 @@ const Products = () => {
     }
   }, [categoryParam]);
 
-  const allProducts = [
-    {
-      id: "1",
-      name: "Handcrafted Tabla Set",
-      price: 14999,
-      imageUrl:
-        "https://lh3.googleusercontent.com/aida-public/AB6AXuDWCHkQGW5GKWlNLaqV14qiCjjDhawLJXucBHLlsknc2jW2ZVq8Ql0uINt5vMZLCzbAwsKgqY5nszOi5Z5av8IzfCreGPmiB-HSXzLxlVp_AOi1uTB-O2m2b7CeY0CW3-RiQrBNJCy2r4iEcrWMpnUrZfkzdV_K9exGEnS6i7NLciihnKNPmpvuE7x09dkKtjnuIymJpswAwuvnFriuuf1JUjk-2DLHPmGcLspPIdPYkP1eUZTybN8YBnpLtqKrNCLxPpJHoscIZ9bW",
-      rating: 5,
-      reviewCount: 48,
-      badge: "Best Seller",
-      category: "Percussion",
-      subcategory: "Nal Dholak",
-    },
-    {
-      id: "2",
-      name: "Professional Rosewood Sitar",
-      price: 45000,
-      imageUrl:
-        "https://lh3.googleusercontent.com/aida-public/AB6AXuAqI5pI15naEFpKpeK9jc5UvmarwzlOnTfMk2gMW5O1bO-lrXCBrk_YxlckML2uQzph2QxoMjwagvP3wcfGoQRHJFVAPARDNYQ1EZ9-z2ickjbIqG-kgdOuRcQLWyI2FOMlyykgf7g0OgzeXFZdFft_xCTw2RliyQW3zMrhRsLtkQqF6k0W_ATm93FZm7gaelNAf87Se_BqzlFf4bi6FYbxhYI-po5LHAkwLxI1SOEYV9jQhJGz4YCzWkHS39m1NzwKS4KnLk1EcAwE",
-      rating: 4.9,
-      reviewCount: 12,
-      category: "Strings",
-      subcategory: "Sitar",
-    },
-    {
-      id: "3",
-      name: "Traditional Bamboo Flute",
-      price: 1250,
-      imageUrl:
-        "https://lh3.googleusercontent.com/aida-public/AB6AXuA4vEs0hhCwpDn_GQQBlBPm02_K0YJsUSgIxGwpo9NyZBeDtdRyG4LoGtL1vIu0I8l1qy3TRRx4dmRSMRCLkQzwLowsY5tlwm7gSnimkJgnAlf2uUHEzRwWyB9691pHEoaYzxpofFhecrhGHi-tGGdxkXYNhFFtNz-iNypfnEsj5pzKPGULJH09SOeHwE4_1CEAoHeacM6J_gwtG08lGoAn32jRAZOvZmTrLpeUd8YrS_6o5aZ_IDwMDG7gXKKmvTZnPcIhRRnJON-m",
-      rating: 5,
-      reviewCount: 86,
-      category: "Wind",
-      subcategory: "Flute",
-    },
-    {
-      id: "4",
-      name: "2 Line Standard Harmonium",
-      price: 18500,
-      imageUrl:
-        "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=800&q=80",
-      rating: 4.7,
-      reviewCount: 24,
-      category: "Harmoniums",
-      subcategory: "2 Line",
-    },
-    {
-      id: "5",
-      name: "3 Line Professional Harmonium",
-      price: 28000,
-      imageUrl:
-        "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=800&q=80",
-      rating: 4.9,
-      reviewCount: 18,
-      category: "Harmoniums",
-      subcategory: "3 Line",
-    },
-    {
-      id: "6",
-      name: "Scale Changer Harmonium - Teak Wood",
-      price: 55000,
-      imageUrl:
-        "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=800&q=80",
-      rating: 5,
-      reviewCount: 32,
-      badge: "Premium",
-      category: "Harmoniums",
-      subcategory: "Scale Changer",
-    },
-    {
-      id: "7",
-      name: "Professional Dholl Tasha Set",
-      price: 12000,
-      imageUrl:
-        "https://images.unsplash.com/photo-1519892300165-cb5542fb47c7?w=800&q=80",
-      rating: 4.8,
-      reviewCount: 15,
-      category: "Percussion",
-      subcategory: "Dholl/Tasha",
-    },
-    {
-      id: "8",
-      name: "Traditional Khol Mrudanga",
-      price: 8500,
-      imageUrl:
-        "https://images.unsplash.com/photo-1519892300165-cb5542fb47c7?w=800&q=80",
-      rating: 4.9,
-      reviewCount: 22,
-      category: "Percussion",
-      subcategory: "Khol Mrudanga",
-    },
-    {
-      id: "9",
-      name: "Brass Hand Kartal Pair",
-      price: 850,
-      imageUrl:
-        "https://images.unsplash.com/photo-1519892300165-cb5542fb47c7?w=800&q=80",
-      rating: 4.7,
-      reviewCount: 34,
-      category: "Percussion",
-      subcategory: "Hand Kartal",
-    },
-    {
-      id: "10",
-      name: "Acoustic Dreadnought Guitar",
-      price: 12500,
-      imageUrl:
-        "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=800&q=80",
-      rating: 4.6,
-      reviewCount: 54,
-      category: "Guitars",
-      subcategory: "Guitar",
-    },
-    {
-      id: "11",
-      name: "Automatic Arati Machine - Large",
-      price: 35000,
-      imageUrl:
-        "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=800&q=80",
-      rating: 5,
-      reviewCount: 10,
-      badge: "New Arrival",
-      category: "Devotional",
-      subcategory: "Arati Machine",
-    },
-  ];
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const data = await adminService.getProducts();
+        setAllProducts(data);
+      } catch (error) {
+        console.error("Failed to fetch products:", error);
+        toast.error("Failed to load products");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
 
   const filteredProducts = allProducts.filter((product) => {
     if (selectedFilter === "All") return true;

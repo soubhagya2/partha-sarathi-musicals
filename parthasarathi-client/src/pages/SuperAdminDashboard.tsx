@@ -13,43 +13,43 @@ import Header from "../components/layout/Header";
 import { adminService } from "../services/adminService";
 import { toast } from "sonner";
 
+interface AdminUser {
+  _id?: string;
+  id?: string;
+  name: string;
+  email: string;
+  role: string;
+  permissions: string[];
+}
+
 const SuperAdminDashboard = () => {
+  const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({
     users: "0",
     health: "0%",
     security: "Inactive",
   });
+  const [admins, setAdmins] = useState<AdminUser[]>([]);
 
   useEffect(() => {
-    const fetchStats = async () => {
+    const fetchData = async () => {
       try {
-        const data = await adminService.getSystemStats();
-        setStats(data);
+        const [statsData, adminsData] = await Promise.all([
+          adminService.getSystemStats(),
+          adminService.getAllAdmins(),
+        ]);
+        setStats(statsData);
+        setAdmins(adminsData);
       } catch (error) {
-        console.error("Failed to fetch system stats:", error);
+        console.error("Failed to fetch dashboard data:", error);
+        toast.error("Failed to load system data");
+      } finally {
+        setLoading(false);
       }
     };
 
-    fetchStats();
+    fetchData();
   }, []);
-
-  // Mock data for administrative users
-  const [admins, setAdmins] = useState([
-    {
-      id: "1",
-      name: "Admin One",
-      email: "admin1@parthasarathi.com",
-      role: "ADMIN",
-      permissions: ["product:write", "order:read"],
-    },
-    {
-      id: "2",
-      name: "Support Lead",
-      email: "support@parthasarathi.com",
-      role: "SUPPORT",
-      permissions: ["support:reply", "support:read"],
-    },
-  ]);
 
   const allPermissions = [
     { id: "user:write", label: "Manage Users" },
@@ -63,12 +63,13 @@ const SuperAdminDashboard = () => {
   const togglePermission = (adminId: string, permissionId: string) => {
     setAdmins((prev) =>
       prev.map((admin) => {
-        if (admin.id === adminId) {
+        const id = admin._id || admin.id;
+        if (id === adminId) {
           const hasPermission = admin.permissions.includes(permissionId);
           return {
             ...admin,
             permissions: hasPermission
-              ? admin.permissions.filter((p) => p !== permissionId)
+              ? admin.permissions.filter((p: string) => p !== permissionId)
               : [...admin.permissions, permissionId],
           };
         }
@@ -80,7 +81,10 @@ const SuperAdminDashboard = () => {
   const handleSaveAll = async () => {
     try {
       const updatePromises = admins.map((admin) =>
-        adminService.updateAdminPermissions(admin.id, admin.permissions),
+        adminService.updateAdminPermissions(
+          admin._id || admin.id,
+          admin.permissions,
+        ),
       );
       await Promise.all(updatePromises);
       toast.success("All permissions synchronized successfully");
@@ -96,7 +100,7 @@ const SuperAdminDashboard = () => {
       )
     ) {
       await adminService.revokeAccess(adminId);
-      setAdmins((prev) => prev.filter((a) => a.id !== adminId));
+      setAdmins((prev) => prev.filter((a) => (a._id || a.id) !== adminId));
       toast.success("Access revoked");
     }
   };
@@ -198,69 +202,91 @@ const SuperAdminDashboard = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-50">
-                {admins.map((admin) => (
-                  <tr
-                    key={admin.id}
-                    className="hover:bg-slate-50/50 transition-colors"
-                  >
-                    <td className="px-8 py-6">
-                      <div className="flex items-center gap-3">
-                        <div className="size-10 rounded-full bg-slate-200 flex items-center justify-center font-bold text-slate-600">
-                          {admin.name.charAt(0)}
-                        </div>
-                        <div>
-                          <p className="font-ui font-bold text-slate-900">
-                            {admin.name}
-                          </p>
-                          <p className="text-xs text-slate-400">
-                            {admin.email}
-                          </p>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-8 py-6">
-                      <span
-                        className={`text-[10px] font-bold px-2.5 py-1 rounded-lg uppercase tracking-wider ${
-                          admin.role === "ADMIN"
-                            ? "bg-amber-100 text-amber-700"
-                            : "bg-blue-100 text-blue-700"
-                        }`}
-                      >
-                        {admin.role}
-                      </span>
-                    </td>
-                    <td className="px-8 py-6">
-                      <div className="flex flex-wrap gap-2 max-w-md">
-                        {allPermissions.map((perm) => (
-                          <button
-                            key={perm.id}
-                            onClick={() => togglePermission(admin.id, perm.id)}
-                            className={`text-[10px] font-bold px-3 py-1.5 rounded-full border transition-all flex items-center gap-1.5 ${
-                              admin.permissions.includes(perm.id)
-                                ? "bg-slate-900 border-slate-900 text-white"
-                                : "bg-white border-slate-200 text-slate-400 hover:border-slate-900 hover:text-slate-900"
-                            }`}
-                          >
-                            {admin.permissions.includes(perm.id) ? (
-                              <CheckCircle2 className="size-3" />
-                            ) : (
-                              <XCircle className="size-3" />
-                            )}
-                            {perm.label}
-                          </button>
-                        ))}
-                      </div>
-                    </td>
-                    <td className="px-8 py-6 text-right">
-                      <button
-                        onClick={() => handleRevoke(admin.id)}
-                        className="text-xs font-bold text-red-500 hover:underline"
-                      >
-                        Revoke Access
-                      </button>
+                {loading ? (
+                  <tr>
+                    <td
+                      colSpan={4}
+                      className="px-8 py-12 text-center text-slate-400 font-ui"
+                    >
+                      Initializing secure connection...
                     </td>
                   </tr>
-                ))}
+                ) : admins.length === 0 ? (
+                  <tr>
+                    <td
+                      colSpan={4}
+                      className="px-8 py-12 text-center text-slate-400 font-ui"
+                    >
+                      No administrative users found.
+                    </td>
+                  </tr>
+                ) : (
+                  admins.map((admin) => (
+                    <tr
+                      key={admin._id || admin.id}
+                      className="hover:bg-slate-50/50 transition-colors"
+                    >
+                      <td className="px-8 py-6">
+                        <div className="flex items-center gap-3">
+                          <div className="size-10 rounded-full bg-slate-200 flex items-center justify-center font-bold text-slate-600">
+                            {admin.name.charAt(0)}
+                          </div>
+                          <div>
+                            <p className="font-ui font-bold text-slate-900">
+                              {admin.name}
+                            </p>
+                            <p className="text-xs text-slate-400">
+                              {admin.email}
+                            </p>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-8 py-6">
+                        <span
+                          className={`text-[10px] font-bold px-2.5 py-1 rounded-lg uppercase tracking-wider ${
+                            admin.role === "ADMIN"
+                              ? "bg-amber-100 text-amber-700"
+                              : "bg-blue-100 text-blue-700"
+                          }`}
+                        >
+                          {admin.role}
+                        </span>
+                      </td>
+                      <td className="px-8 py-6">
+                        <div className="flex flex-wrap gap-2 max-w-md">
+                          {allPermissions.map((perm) => (
+                            <button
+                              key={perm.id}
+                              onClick={() =>
+                                togglePermission(admin._id || admin.id, perm.id)
+                              }
+                              className={`text-[10px] font-bold px-3 py-1.5 rounded-full border transition-all flex items-center gap-1.5 ${
+                                admin.permissions.includes(perm.id)
+                                  ? "bg-slate-900 border-slate-900 text-white"
+                                  : "bg-white border-slate-200 text-slate-400 hover:border-slate-900 hover:text-slate-900"
+                              }`}
+                            >
+                              {admin.permissions.includes(perm.id) ? (
+                                <CheckCircle2 className="size-3" />
+                              ) : (
+                                <XCircle className="size-3" />
+                              )}
+                              {perm.label}
+                            </button>
+                          ))}
+                        </div>
+                      </td>
+                      <td className="px-8 py-6 text-right">
+                        <button
+                          onClick={() => handleRevoke(admin._id || admin.id)}
+                          className="text-xs font-bold text-red-500 hover:underline"
+                        >
+                          Revoke Access
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </div>

@@ -1,14 +1,14 @@
 import { Link } from "react-router-dom";
-import { SignIn } from "@clerk/clerk-react";
+import { SignUp } from "@clerk/clerk-react";
 import { ShieldAlert, Zap } from "lucide-react";
 import Header from "../components/layout/Header";
 
-const SuperAdminLogin = () => {
+const SuperAdminRegister = () => {
   return (
     <div className="h-screen flex flex-col bg-slate-950 overflow-hidden">
       <Header />
       <main className="flex-1 flex overflow-hidden">
-        {/* Left Side: Login Form */}
+        {/* Left Side: Registration Form */}
         <div className="w-full lg:w-1/2 flex items-center justify-center p-6 lg:p-12 bg-slate-900">
           <div className="w-full max-w-md">
             <div className="bg-slate-800 rounded-[2rem] shadow-2xl shadow-black border border-slate-700 p-8 lg:p-10">
@@ -18,34 +18,34 @@ const SuperAdminLogin = () => {
                 </div>
                 <div>
                   <h1 className="font-brand text-2xl text-white">
-                    Terminal Access
+                    Initialize Root
                   </h1>
                   <p className="font-ui text-xs text-red-500 font-bold uppercase tracking-widest">
-                    Super Admin Level
+                    Super Admin Registration
                   </p>
                 </div>
               </div>
 
               <div className="flex justify-center">
-                <SignIn
+                <SignUp
                   routing="path"
-                  path="/super-admin/login"
-                  afterSignInUrl="/super-admin/dashboard"
-                  signUpUrl="/super-admin/register"
+                  path="/super-admin/register"
+                  afterSignUpUrl="/super-admin/dashboard"
+                  signInUrl="/super-admin/login"
                 />
               </div>
 
               <div className="mt-6 text-center">
                 <Link
-                  to="/login"
+                  to="/super-admin/login"
                   className="text-[10px] font-bold text-slate-500 hover:text-white uppercase tracking-widest transition-colors"
                 >
-                  Return to Mainframe
+                  Already have root access? Login
                 </Link>
               </div>
 
               <p className="mt-8 text-center text-[10px] font-bold text-red-900 uppercase tracking-[0.2em] animate-pulse">
-                Critical System Access Only
+                Authorized Personnel Only
               </p>
             </div>
           </div>
@@ -63,11 +63,11 @@ const SuperAdminLogin = () => {
               </div>
               <h2 className="font-brand text-5xl text-white leading-tight">
                 System <br />
-                Overwatch
+                Genesis
               </h2>
               <p className="text-slate-400 font-ui text-lg max-w-sm">
-                Manage global permissions, audit logs, and core system
-                configurations.
+                Establish the primary administrative authority for the
+                Parthasarathi Musical ecosystem.
               </p>
             </div>
           </div>
@@ -77,4 +77,4 @@ const SuperAdminLogin = () => {
   );
 };
 
-export default SuperAdminLogin;
+export default SuperAdminRegister;

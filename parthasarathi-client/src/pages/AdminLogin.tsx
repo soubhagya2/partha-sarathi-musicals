@@ -1,19 +1,9 @@
-import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { Lock, Mail, ArrowRight, ShieldAlert } from "lucide-react";
+import { Link } from "react-router-dom";
+import { SignIn } from "@clerk/clerk-react";
+import { ShieldAlert } from "lucide-react";
 import Header from "../components/layout/Header";
 
 const AdminLogin = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const navigate = useNavigate();
-
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Admin authentication logic would go here
-    navigate("/admin/dashboard");
-  };
-
   return (
     <div className="h-screen flex flex-col bg-white overflow-hidden">
       <Header />
@@ -36,49 +26,13 @@ const AdminLogin = () => {
                 </div>
               </div>
 
-              <form onSubmit={handleLogin} className="space-y-5">
-                <div className="space-y-1.5">
-                  <label className="font-ui text-xs font-bold text-red-900/40 uppercase tracking-widest ml-1">
-                    Admin Email
-                  </label>
-                  <div className="relative group">
-                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 size-5 text-red-400 group-focus-within:text-red-950 transition-colors" />
-                    <input
-                      type="email"
-                      required
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="admin@parthasarathi.com"
-                      className="w-full pl-12 pr-4 py-3.5 rounded-xl border-2 border-red-50 bg-red-50/50 focus:bg-white focus:border-red-950 outline-none transition-all font-ui text-sm"
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="font-ui text-xs font-bold text-red-900/40 uppercase tracking-widest ml-1">
-                    Password
-                  </label>
-                  <div className="relative group">
-                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 size-5 text-red-400 group-focus-within:text-red-950 transition-colors" />
-                    <input
-                      type="password"
-                      required
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      placeholder="••••••••"
-                      className="w-full pl-12 pr-4 py-3.5 rounded-xl border-2 border-red-50 bg-red-50/50 focus:bg-white focus:border-red-950 outline-none transition-all font-ui text-sm"
-                    />
-                  </div>
-                </div>
-
-                <button
-                  type="submit"
-                  className="w-full bg-red-950 text-white py-4 rounded-xl font-ui font-bold text-sm shadow-lg shadow-red-950/20 hover:bg-black transition-all flex items-center justify-center gap-2 group"
-                >
-                  Login to Dashboard
-                  <ArrowRight className="size-4 group-hover:translate-x-1 transition-transform" />
-                </button>
-              </form>
+              <div className="flex justify-center">
+                <SignIn
+                  routing="path"
+                  path="/admin/login"
+                  redirectUrl="/admin/dashboard"
+                />
+              </div>
 
               <div className="mt-6 text-center">
                 <Link

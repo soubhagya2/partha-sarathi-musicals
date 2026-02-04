@@ -1,12 +1,28 @@
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
+import { adminService } from "../services/adminService";
+import { toast } from "sonner";
 
 export default function AdminProducts() {
-  // Mock data for demonstration
-  const products = [
-    { id: 1, name: "Acoustic Guitar", price: "₹15,000", stock: 12 },
-    { id: 2, name: "Electronic Keyboard", price: "₹25,000", stock: 8 },
-  ];
+  const [products, setProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const data = await adminService.getProducts();
+        setProducts(data);
+      } catch (error) {
+        console.error("Failed to fetch products:", error);
+        toast.error("Failed to load products");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
 
   return (
     <div className="p-8">
@@ -44,30 +60,53 @@ export default function AdminProducts() {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100">
-            {products.map((product) => (
-              <tr key={product.id} className="hover:bg-gray-50">
-                <td className="px-6 py-4 text-sm text-gray-700">
-                  {product.id}
-                </td>
-                <td className="px-6 py-4 text-sm text-gray-700 font-medium">
-                  {product.name}
-                </td>
-                <td className="px-6 py-4 text-sm text-gray-700">
-                  {product.price}
-                </td>
-                <td className="px-6 py-4 text-sm text-gray-700">
-                  {product.stock}
-                </td>
-                <td className="px-6 py-4 text-sm">
-                  <button className="text-blue-600 hover:text-blue-800 mr-4">
-                    Edit
-                  </button>
-                  <button className="text-red-600 hover:text-red-800">
-                    Delete
-                  </button>
+            {loading ? (
+              <tr>
+                <td
+                  colSpan={5}
+                  className="px-6 py-4 text-center text-sm text-gray-500"
+                >
+                  Loading products...
                 </td>
               </tr>
-            ))}
+            ) : products.length === 0 ? (
+              <tr>
+                <td
+                  colSpan={5}
+                  className="px-6 py-4 text-center text-sm text-gray-500"
+                >
+                  No products found.
+                </td>
+              </tr>
+            ) : (
+              products.map((product) => (
+                <tr
+                  key={product._id || product.id}
+                  className="hover:bg-gray-50"
+                >
+                  <td className="px-6 py-4 text-sm text-gray-700">
+                    {product._id || product.id}
+                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-700 font-medium">
+                    {product.name}
+                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-700">
+                    ₹{product.price?.toLocaleString("en-IN")}
+                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-700">
+                    {product.stock}
+                  </td>
+                  <td className="px-6 py-4 text-sm">
+                    <button className="text-blue-600 hover:text-blue-800 mr-4">
+                      Edit
+                    </button>
+                    <button className="text-red-600 hover:text-red-800">
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>
