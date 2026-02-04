@@ -1,4 +1,13 @@
-import { ShoppingCart, User, Search, ChevronDown, Heart } from "lucide-react";
+import {
+  ShoppingCart,
+  User,
+  Search,
+  ChevronDown,
+  Heart,
+  ShieldCheck,
+  Headset,
+  ShieldAlert,
+} from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 
 const Header = () => {
@@ -111,13 +120,60 @@ const Header = () => {
           </Link>
 
           {/* Account */}
-          <Link
-            to="/profile"
-            className="flex h-10 w-10 items-center justify-center rounded-lg border border-amber-200 text-amber-700 hover:bg-orange-600 hover:border-orange-600 hover:text-white transition-all duration-200"
-            aria-label="Account"
-          >
-            <User className="h-5 w-5" />
-          </Link>
+          <div className="group relative py-2">
+            <Link
+              to="/profile"
+              className="flex h-10 w-10 items-center justify-center rounded-lg border border-amber-200 text-amber-700 hover:bg-orange-600 hover:border-orange-600 hover:text-white transition-all duration-200"
+              aria-label="Account"
+            >
+              <User className="h-5 w-5" />
+            </Link>
+
+            {/* User Dropdown */}
+            <div className="absolute right-0 top-full w-56 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+              <div className="mt-2 rounded-xl border border-amber-200 bg-white p-2 shadow-xl">
+                <div className="px-3 py-2 mb-1 border-b border-amber-50">
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-amber-900/40">
+                    Access Portals
+                  </p>
+                </div>
+                <ul className="flex flex-col gap-1">
+                  <li>
+                    <Link
+                      to="/login"
+                      className="flex items-center gap-3 px-3 py-2 text-sm font-ui font-medium text-amber-900 hover:bg-amber-50 hover:text-orange-600 rounded-lg transition-colors"
+                    >
+                      <User className="h-4 w-4" /> Login User
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to="/support/login"
+                      className="flex items-center gap-3 px-3 py-2 text-sm font-ui font-medium text-amber-900 hover:bg-amber-50 hover:text-orange-600 rounded-lg transition-colors"
+                    >
+                      <Headset className="h-4 w-4" /> Support Access
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to="/admin/login"
+                      className="flex items-center gap-3 px-3 py-2 text-sm font-ui font-medium text-amber-900 hover:bg-amber-50 hover:text-orange-600 rounded-lg transition-colors"
+                    >
+                      <ShieldCheck className="h-4 w-4" /> Admin Portal
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to="/super-admin/login"
+                      className="flex items-center gap-3 px-3 py-2 text-sm font-ui font-medium text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                    >
+                      <ShieldAlert className="h-4 w-4" /> Super Admin
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
 
           {/* Cart */}
           <button

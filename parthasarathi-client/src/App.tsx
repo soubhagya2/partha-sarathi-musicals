@@ -24,8 +24,16 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import SupportLogin from "./pages/SupportLogin";
 import SupportDashboard from "./pages/SupportDashboard";
 import SupportTickets from "./pages/SupportTickets";
+// @ts-ignore
 import ScrollToHash from "./utils/ScrollToHash";
-
+import AdminDashboard from "./pages/AdminDashboard";
+import AdminProducts from "./pages/AdminProducts";
+import AdminAddProduct from "./pages/AdminAddProduct";
+import AdminSupport from "./pages/AdminSupport";
+import AdminLogin from "./pages/AdminLogin";
+import SuperAdminDashboard from "./pages/SuperAdminDashboard";
+import SuperAdminLogin from "./pages/SuperAdminLogin";
+import ProtectedRoute from "./services/ProtectedRoute";
 
 function App() {
   return (
@@ -57,6 +65,52 @@ function App() {
         <Route path="/support/login" element={<SupportLogin />} />
         <Route path="/support/dashboard" element={<SupportDashboard />} />
         <Route path="/support/tickets" element={<SupportTickets />} />
+        <Route path="/admin/login" element={<AdminLogin />} />
+        <Route path="/super-admin/login" element={<SuperAdminLogin />} />
+
+        {/* Super Admin Routes */}
+        <Route
+          path="/super-admin/dashboard"
+          element={
+            <ProtectedRoute allowedRoles={["SUPER_ADMIN"]}>
+              <SuperAdminDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Admin Routes */}
+        <Route
+          path="/admin/dashboard"
+          element={
+            <ProtectedRoute allowedRoles={["SUPER_ADMIN", "ADMIN"]}>
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/products"
+          element={
+            <ProtectedRoute allowedRoles={["SUPER_ADMIN", "ADMIN"]}>
+              <AdminProducts />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/products/add"
+          element={
+            <ProtectedRoute allowedRoles={["SUPER_ADMIN", "ADMIN"]}>
+              <AdminAddProduct />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/support"
+          element={
+            <ProtectedRoute allowedRoles={["SUPER_ADMIN", "ADMIN"]}>
+              <AdminSupport />
+            </ProtectedRoute>
+          }
+        />
         <Route path="*" element={<Home />} />
       </Routes>
       <Toaster position="top-center" richColors />

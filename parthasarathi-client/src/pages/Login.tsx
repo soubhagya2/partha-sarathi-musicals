@@ -211,6 +211,21 @@ function Login() {
                       Create an account
                     </Link>
                   </p>
+
+                  <div className="mt-8 pt-6 border-t border-amber-50 flex justify-center gap-6">
+                    <Link
+                      to="/support/login"
+                      className="text-[10px] font-bold text-amber-900/40 hover:text-orange-600 uppercase tracking-widest transition-colors"
+                    >
+                      Support Portal
+                    </Link>
+                    <Link
+                      to="/admin/login"
+                      className="text-[10px] font-bold text-amber-900/40 hover:text-orange-600 uppercase tracking-widest transition-colors"
+                    >
+                      Admin Access
+                    </Link>
+                  </div>
                 </div>
               </div>
 

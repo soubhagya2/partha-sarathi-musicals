@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Lock, Mail, ArrowRight, ShieldCheck } from "lucide-react";
 import Header from "../components/layout/Header";
 
@@ -79,6 +79,15 @@ const SupportLogin = () => {
                   <ArrowRight className="size-4 group-hover:translate-x-1 transition-transform" />
                 </button>
               </form>
+
+              <div className="mt-6 text-center">
+                <Link
+                  to="/login"
+                  className="text-[10px] font-bold text-amber-900/40 hover:text-amber-950 uppercase tracking-widest transition-colors"
+                >
+                  Customer Login
+                </Link>
+              </div>
 
               <p className="mt-8 text-center text-[10px] font-bold text-amber-800/40 uppercase tracking-[0.2em]">
                 Internal Use Only • Secure Encrypted Session
