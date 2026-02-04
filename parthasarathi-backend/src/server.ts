@@ -62,9 +62,18 @@ async function startServer() {
   httpServer.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
     console.log("✅ Socket.IO adapter connected to MongoDB");
-  
   });
 }
+
+httpServer.on("error", (err: NodeJS.ErrnoException) => {
+  if (err.code === "EADDRINUSE") {
+    console.error(
+      `❌ Port ${PORT} is already in use. Stop the other process or set PORT in .env`
+    );
+    process.exit(1);
+  }
+  throw err;
+});
 
 startServer().catch((err) => {
   console.error("❌ Server failed to start:", err);
