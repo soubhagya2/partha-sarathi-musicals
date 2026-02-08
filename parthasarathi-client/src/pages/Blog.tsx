@@ -48,7 +48,7 @@ const Blog = () => {
         <Breadcrumbs items={[{ label: "Musical Insights" }]} />
 
         <div className="text-center mb-16">
-          <h1 className="font-brand text-5xl lg:text-6xl text-amber-950 mb-4">
+          <h1 className="font-helper text-5xl lg:text-6xl font-semibold text-amber-950 mb-4">
             Musical Insights
           </h1>
           <p className="font-ui text-lg text-amber-800/60 max-w-2xl mx-auto">
@@ -84,7 +84,7 @@ const Blog = () => {
                   </span>
                 </div>
 
-                <h2 className="font-brand text-2xl text-amber-950 mb-4 group-hover:text-orange-600 transition-colors leading-tight">
+                <h2 className="font-helper text-2xl font-semibold text-amber-950 mb-4 group-hover:text-orange-600 transition-colors leading-tight">
                   {post.title}
                 </h2>
 

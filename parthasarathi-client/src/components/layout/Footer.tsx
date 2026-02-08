@@ -26,7 +26,7 @@ function Footer() {
   };
 
   return (
-    <footer className="bg-gradient-to-b from-amber-50 to-orange-50/30 pt-20 pb-10 mt-10 border-t border-amber-200/60">
+    <footer className="bg-linear-to-b from-amber-50 to-orange-50/30 pt-20 pb-10 mt-10 border-t border-amber-200/60">
       <div className="max-w-7xl mx-auto px-6 lg:px-10">
         {/* Main Footer Content */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">

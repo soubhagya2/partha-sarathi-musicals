@@ -100,14 +100,14 @@ function Home() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-amber-50/50 via-white to-orange-50/30">
+    <div className="min-h-screen bg-linear-to-b from-amber-50/50 via-white to-orange-50/30">
       <Header />
       <main className="max-w-7xl mx-auto">
         <Hero />
 
         {/* Categories Section */}
         <section className="px-6 lg:px-10 py-16">
-          <h2 className="font-brand text-4xl font-normal text-amber-950 mb-10">
+          <h2 className="font-helper text-4xl font-semibold text-amber-950 mb-10">
             Shop by Category
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
@@ -124,7 +124,7 @@ function Home() {
         {/* Featured Products Section */}
         <section className="px-6 lg:px-10 py-16">
           <div className="flex items-center justify-between mb-10">
-            <h2 className="font-brand text-4xl font-normal text-amber-950">
+            <h2 className="font-helper text-4xl font-semibold text-amber-950">
               Featured Products
             </h2>
             <a
@@ -158,7 +158,7 @@ function Home() {
                 <h4 className="font-ui font-bold text-lg text-[#1c180d]">
                   {feature.title}
                 </h4>
-                <p className="font-ui text-sm opacity-60 max-w-[200px] text-[#1c180d]">
+                <p className="font-ui text-sm opacity-60 max-w-50 text-[#1c180d]">
                   {feature.description}
                 </p>
               </div>
@@ -168,7 +168,7 @@ function Home() {
 
         {/* Testimonials Section */}
         <section className="px-6 lg:px-10 py-16 text-center max-w-4xl mx-auto">
-          <h2 className="font-brand text-3xl font-bold mb-12 text-[#1c180d]">
+          <h2 className="font-helper text-3xl font-bold mb-12 text-[#1c180d]">
             Voices of Music
           </h2>
           <div className="relative p-10 bg-white rounded-2xl border border-[#f4f0e7]">
@@ -221,7 +221,7 @@ function Home() {
               </svg>
             </div>
 
-            <h2 className="font-brand text-3xl lg:text-5xl font-bold text-white mb-6 relative z-10">
+            <h2 className="font-helper text-3xl lg:text-5xl font-bold text-white mb-6 relative z-10">
               Stay in Tune
             </h2>
             <p className="font-ui text-white/70 mb-10 text-lg max-w-lg mx-auto relative z-10">

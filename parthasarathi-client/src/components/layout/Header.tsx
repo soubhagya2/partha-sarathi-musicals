@@ -26,7 +26,7 @@ const Header = () => {
               <path d="M39.5563 34.1455V13.8546C39.5563 15.708 36.8773 17.3437 32.7927 18.3189C30.2914 18.916 27.263 19.2655 24 19.2655C20.737 19.2655 17.7086 18.916 15.2073 18.3189C11.1227 17.3437 8.44365 15.708 8.44365 13.8546V34.1455C8.44365 35.9988 11.1227 37.6346 15.2073 38.6098C17.7086 39.2069 20.737 39.5564 24 39.5564C27.263 39.5564 30.2914 39.2069 32.7927 38.6098C36.8773 37.6346 39.5563 35.9988 39.5563 34.1455Z" />
             </svg>
           </div>
-          <span className="font-brand text-xl font-bold italic tracking-tight text-amber-900">
+          <span className="font-brand text-xl font-normal italic tracking-tight text-amber-900">
             Parthasarathi Musical
           </span>
         </Link>
@@ -47,7 +47,7 @@ const Header = () => {
               <ChevronDown className="h-4 w-4 transition-transform group-hover:rotate-180" />
             </button>
 
-            <div className="absolute left-1/2 top-full w-[600px] -translate-x-1/2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+            <div className="absolute left-1/2 top-full w-full max-w-150 -translate-x-1/2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
               <div className="mt-2 rounded-xl border border-amber-200 bg-white p-6 shadow-xl">
                 <div className="grid grid-cols-3 gap-8">
                   <div>
@@ -160,6 +160,14 @@ const Header = () => {
                       className="flex items-center gap-3 px-3 py-2 text-sm font-ui font-medium text-amber-900 hover:bg-amber-50 hover:text-orange-600 rounded-lg transition-colors"
                     >
                       <ShieldCheck className="h-4 w-4" /> Admin Portal
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to="/super-admin/login"
+                      className="flex items-center gap-3 px-3 py-2 text-sm font-ui font-medium text-red-700 hover:bg-red-50 hover:text-red-700 rounded-lg transition-colors"
+                    >
+                      <ShieldAlert className="h-4 w-4" /> Super Admin
                     </Link>
                   </li>
                 </ul>

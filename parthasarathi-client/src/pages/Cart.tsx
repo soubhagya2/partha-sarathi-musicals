@@ -27,7 +27,9 @@ const Cart = () => {
       <main className="max-w-7xl mx-auto px-6 lg:px-10 py-12">
         <Breadcrumbs items={[{ label: "Your Cart" }]} />
 
-        <h1 className="font-brand text-4xl text-amber-950 mb-10">Your Cart</h1>
+        <h1 className="font-helper text-4xl font-semibold text-amber-950 mb-10">
+          Your Cart
+        </h1>
 
         <div className="grid lg:grid-cols-12 gap-12">
           <div className="lg:col-span-8 space-y-6">
@@ -81,7 +83,7 @@ const Cart = () => {
 
           <div className="lg:col-span-4">
             <div className="bg-white p-8 rounded-3xl border border-amber-100 shadow-sm sticky top-24">
-              <h3 className="font-brand text-2xl text-amber-950 mb-6">
+              <h3 className="font-helper text-2xl font-semibold text-amber-950 mb-6">
                 Order Summary
               </h3>
               <div className="space-y-4 mb-6">

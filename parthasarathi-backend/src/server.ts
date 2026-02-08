@@ -9,6 +9,7 @@ import { Server } from "socket.io";
 import { createAdapter } from "@socket.io/mongo-adapter";
 import { MongoClient } from "mongodb";
 import connectDB from "./config/db.js";
+import { User } from "./models/user.js";
 
 dotenv.config({ quiet: true });
 
@@ -37,6 +38,41 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 // ----- Start Server -----
 const PORT = process.env.PORT || 5000;
 
+async function ensureSuperAdmin(): Promise<void> {
+  const email = process.env.SUPER_ADMIN_EMAIL;
+  const clerkId = process.env.SUPER_ADMIN_CLERK_ID;
+  const name = process.env.SUPER_ADMIN_NAME || "Super Admin";
+
+  if (!email || !clerkId) {
+    console.warn(
+      "SUPER_ADMIN_EMAIL or SUPER_ADMIN_CLERK_ID not set. Skipping SUPER_ADMIN bootstrap."
+    );
+    return;
+  }
+
+  const existing = await User.findOne({ role: "SUPER_ADMIN" });
+
+  if (!existing) {
+    await User.create({
+      clerkId,
+      role: "SUPER_ADMIN",
+      name,
+      email,
+      isActive: true,
+      isBlocked: false,
+    });
+    console.log("✅ SUPER_ADMIN user created");
+    return;
+  }
+
+  // Keep SUPER_ADMIN email in sync with configuration
+  if (existing.email !== email) {
+    existing.email = email;
+    await existing.save();
+    console.log("✅ SUPER_ADMIN email updated to configured SUPER_ADMIN_EMAIL");
+  }
+}
+
 async function startServer() {
   // Connect MongoDB Atlas for Socket.IO
   const mongoClient = new MongoClient(process.env.MONGODB_URI!);
@@ -58,6 +94,9 @@ async function startServer() {
 
   // Connect your main DB (Mongoose)
   await connectDB();
+
+  // Ensure there is exactly one SUPER_ADMIN with the configured identity
+  await ensureSuperAdmin();
 
   httpServer.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

@@ -48,7 +48,7 @@ const Profile = () => {
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <h2 className="font-brand text-2xl text-amber-950">
+                <h2 className="font-helper text-2xl font-semibold text-amber-950">
                   {user.name}
                 </h2>
                 <p className="text-sm text-amber-800/60 font-ui">
@@ -90,7 +90,7 @@ const Profile = () => {
           {/* Main Content */}
           <div className="lg:col-span-9 space-y-8">
             <section className="bg-white rounded-3xl border border-amber-100 p-8 lg:p-10">
-              <h3 className="font-brand text-3xl text-amber-950 mb-8">
+              <h3 className="font-helper text-3xl font-semibold text-amber-950 mb-8">
                 Recent Orders
               </h3>
               <div className="space-y-4">

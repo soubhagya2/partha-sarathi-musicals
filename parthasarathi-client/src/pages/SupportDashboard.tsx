@@ -68,7 +68,7 @@ const SupportDashboard = () => {
         {/* Main Content */}
         <main className="flex-1 p-8 lg:p-12">
           <div className="flex justify-between items-center mb-10">
-            <h1 className="font-brand text-3xl text-amber-950">
+            <h1 className="font-helper text-3xl font-semibold text-amber-950">
               Support Overview
             </h1>
             <div className="relative">
@@ -96,7 +96,7 @@ const SupportDashboard = () => {
                 <p className="text-xs font-bold text-amber-900/40 uppercase tracking-widest mb-1">
                   {stat.label}
                 </p>
-                <p className="text-2xl font-brand text-amber-950">
+                <p className="text-2xl font-helper font-semibold text-amber-950">
                   {stat.value}
                 </p>
               </div>

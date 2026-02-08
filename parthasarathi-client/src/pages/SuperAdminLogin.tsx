@@ -17,7 +17,7 @@ const SuperAdminLogin = () => {
                   <Zap className="size-6" />
                 </div>
                 <div>
-                  <h1 className="font-brand text-2xl text-white">
+                  <h1 className="font-helper text-2xl font-semibold text-white">
                     Terminal Access
                   </h1>
                   <p className="font-ui text-xs text-red-500 font-bold uppercase tracking-widest">
@@ -30,7 +30,7 @@ const SuperAdminLogin = () => {
                 <SignIn
                   routing="path"
                   path="/super-admin/login"
-                  afterSignInUrl="/super-admin/dashboard"
+                  forceRedirectUrl="/super-admin/dashboard"
                   signUpUrl="/super-admin/register"
                 />
               </div>
@@ -61,7 +61,7 @@ const SuperAdminLogin = () => {
               <div className="size-24 rounded-3xl bg-red-600/10 border border-red-600/20 flex items-center justify-center text-red-600">
                 <ShieldAlert className="size-12" />
               </div>
-              <h2 className="font-brand text-5xl text-white leading-tight">
+              <h2 className="font-helper text-5xl font-semibold text-white leading-tight">
                 System <br />
                 Overwatch
               </h2>

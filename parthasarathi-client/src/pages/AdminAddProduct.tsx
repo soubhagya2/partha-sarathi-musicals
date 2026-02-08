@@ -15,9 +15,13 @@ export default function AdminAddProduct() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // API call logic would go here
-    toast.success("Product added successfully!");
-    navigate("/admin/products");
+    try {
+      // API call logic would go here
+      toast.success("Product added successfully!");
+      navigate("/admin/products");
+    } catch (error) {
+      toast.error("Failed to add product. Please check your inputs.");
+    }
   };
 
   return (

@@ -5,9 +5,8 @@ export default {
     extend: {
       fontFamily: {
         brand: ["DM Serif Display", "serif"],
-        ui: ["Manrope", "sans-serif"],
-        content: ["Libre Baskerville", "serif"],
-        helper: ["Outfit", "sans-serif"],
+        ui: ["Inter", "sans-serif"],
+        helper: ["Roboto", "sans-serif"],
       },
     },
   },

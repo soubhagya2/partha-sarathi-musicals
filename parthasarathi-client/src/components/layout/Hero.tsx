@@ -6,11 +6,11 @@ const Hero = () => {
 
   return (
     <section className="px-6 lg:px-10 py-12">
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-amber-50 to-orange-50/40 border border-amber-200/60">
+      <div className="relative overflow-hidden rounded-2xl bg-linear-to-br from-amber-50 to-orange-50/40 border border-amber-200/60">
         <div className="flex flex-col lg:flex-row items-center">
           {/* Text Content */}
           <div className="p-8 lg:p-16 lg:w-1/2 flex flex-col gap-6">
-            <h1 className="font-brand text-4xl lg:text-6xl text-amber-900 leading-tight">
+            <h1 className="font-brand text-4xl lg:text-6xl font-normal text-amber-900 leading-tight">
               Your One-Stop Destination for{" "}
               <span className="text-orange-600">Musical Instruments</span>
             </h1>
@@ -64,7 +64,6 @@ const Hero = () => {
                   alt="Close-up of a handcrafted Indian sitar with intricate carvings"
                   className="object-cover w-full h-full  "
                 />
-
               </div>
 
               {/* Right Image - Rotate & Scale */}
@@ -75,14 +74,18 @@ const Hero = () => {
                   className="object-cover w-full h-full "
                 />
                 {/* Overlay that fades in */}
-                <div className="absolute inset-0 bg-gradient-to-t from-orange-900/10 to-transparent 
-                                opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                <div
+                  className="absolute inset-0 bg-linear-to-t from-orange-900/10 to-transparent 
+                                opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+                ></div>
               </div>
             </div>
 
             {/* Ambient glow effect */}
-            <div className="absolute -inset-4 bg-gradient-to-r from-orange-400/0 via-orange-400/5 to-orange-400/0 
-                            opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-2xl -z-10"></div>
+            <div
+              className="absolute -inset-4 bg-linear-to-r from-orange-400/0 via-orange-400/5 to-orange-400/0 
+                            opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-2xl -z-10"
+            ></div>
           </div>
         </div>
       </div>

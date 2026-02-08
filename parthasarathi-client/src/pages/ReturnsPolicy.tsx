@@ -10,7 +10,7 @@ const ReturnsPolicy = () => {
       <main className="max-w-4xl mx-auto px-6 py-16">
         <Breadcrumbs items={[{ label: "Returns & Refunds" }]} />
 
-        <h1 className="font-brand text-4xl lg:text-5xl text-amber-950 mb-8">
+        <h1 className="font-helper text-4xl lg:text-5xl font-semibold text-amber-950 mb-8">
           Returns & Refunds
         </h1>
 

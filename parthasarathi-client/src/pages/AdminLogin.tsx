@@ -17,7 +17,7 @@ const AdminLogin = () => {
                   <ShieldAlert className="size-6" />
                 </div>
                 <div>
-                  <h1 className="font-brand text-2xl text-red-950">
+                  <h1 className="font-helper text-2xl font-semibold text-red-950">
                     Admin Portal
                   </h1>
                   <p className="font-ui text-xs text-red-800/60 font-bold uppercase tracking-widest">
@@ -30,7 +30,7 @@ const AdminLogin = () => {
                 <SignIn
                   routing="path"
                   path="/admin/login"
-                  redirectUrl="/admin/dashboard"
+                  forceRedirectUrl="/admin/dashboard"
                 />
               </div>
 

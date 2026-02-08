@@ -18,7 +18,7 @@ const Checkout = () => {
         <div className="grid lg:grid-cols-12 gap-12">
           <div className="lg:col-span-7 space-y-8">
             <section className="bg-white p-8 rounded-3xl border border-amber-100">
-              <h2 className="font-brand text-2xl text-amber-950 mb-6 flex items-center gap-3">
+              <h2 className="font-helper text-2xl font-semibold text-amber-950 mb-6 flex items-center gap-3">
                 <Truck className="size-6 text-orange-600" /> Shipping Details
               </h2>
               <form className="grid md:grid-cols-2 gap-4">
@@ -56,7 +56,7 @@ const Checkout = () => {
             </section>
 
             <section className="bg-white p-8 rounded-3xl border border-amber-100">
-              <h2 className="font-brand text-2xl text-amber-950 mb-6 flex items-center gap-3">
+              <h2 className="font-helper text-2xl font-semibold text-amber-950 mb-6 flex items-center gap-3">
                 <CreditCard className="size-6 text-orange-600" /> Payment Method
               </h2>
               <div className="space-y-4">
@@ -87,7 +87,9 @@ const Checkout = () => {
 
           <div className="lg:col-span-5">
             <div className="bg-amber-950 text-white p-8 rounded-[2.5rem] sticky top-24">
-              <h3 className="font-brand text-2xl mb-8">Order Summary</h3>
+              <h3 className="font-helper text-2xl font-semibold mb-8">
+                Order Summary
+              </h3>
               <div className="space-y-4 mb-8">
                 <div className="flex justify-between items-center">
                   <div className="flex gap-4 items-center">

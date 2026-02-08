@@ -1,5 +1,5 @@
 import { useEffect, useState, type ReactNode } from "react";
-import { useAuth } from "@clerk/clerk-react";
+import { useAuth, useUser } from "@clerk/clerk-react";
 import { Navigate, useLocation } from "react-router-dom";
 
 interface ProtectedRouteProps {
@@ -10,8 +10,10 @@ interface ProtectedRouteProps {
 const ProtectedRoute = ({ children, allowedRoles }: ProtectedRouteProps) => {
   const location = useLocation();
   const { isLoaded, isSignedIn, getToken } = useAuth();
+  const { user } = useUser();
   const [userRole, setUserRole] = useState<string | null>(null);
   const [isLoadingRole, setIsLoadingRole] = useState(true);
+  const superAdminEmail = import.meta.env.VITE_SUPER_ADMIN_EMAIL;
 
   useEffect(() => {
     let isMounted = true;
@@ -82,7 +84,22 @@ const ProtectedRoute = ({ children, allowedRoles }: ProtectedRouteProps) => {
     return <Navigate to={loginPath} state={{ from: location }} replace />;
   }
 
-  if (!userRole || !allowedRoles.includes(userRole)) {
+  // Fallback: if role lookup fails but this is the configured Super Admin account,
+  // still allow access to super-admin routes.
+  const isSuperAdminRoute = location.pathname.startsWith("/super-admin");
+  const currentEmail =
+    user?.primaryEmailAddress?.emailAddress ||
+    user?.emailAddresses?.[0]?.emailAddress;
+
+  if (
+    (!userRole || !allowedRoles.includes(userRole)) &&
+    !(
+      isSuperAdminRoute &&
+      superAdminEmail &&
+      currentEmail &&
+      currentEmail.toLowerCase() === superAdminEmail.toLowerCase()
+    )
+  ) {
     return <Navigate to="/" replace />;
   }
 

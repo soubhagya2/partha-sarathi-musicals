@@ -9,7 +9,7 @@ const PrivacyPolicy = () => {
       <main className="max-w-4xl mx-auto px-6 py-16">
         <Breadcrumbs items={[{ label: "Privacy Policy" }]} />
 
-        <h1 className="font-brand text-4xl lg:text-5xl text-amber-950 mb-8">
+        <h1 className="font-helper text-4xl lg:text-5xl font-semibold text-amber-950 mb-8">
           Privacy Policy
         </h1>
         <p className="font-helper text-sm text-amber-800/40 mb-12 uppercase tracking-widest">

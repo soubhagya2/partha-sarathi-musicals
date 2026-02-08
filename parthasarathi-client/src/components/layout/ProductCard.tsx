@@ -54,7 +54,7 @@ function ProductCard({
     <div className="group relative bg-white rounded-2xl border border-slate-100 transition-all duration-300 hover:shadow-[0_12px_40px_rgba(0,0,0,0.08)] overflow-hidden">
       <Link to={`/product/${id}`} className="block">
         {/* Product Image Section - Reduced height */}
-        <div className="relative aspect-[4/3] overflow-hidden bg-gradient-to-br from-slate-50 to-orange-50/20">
+        <div className="relative aspect-[4/3] overflow-hidden bg-linear-to-br from-slate-50 to-orange-50/20">
           <img
             src={imageUrl}
             alt={name}
@@ -85,7 +85,7 @@ function ProductCard({
           </div>
 
           {/* Bottom Hover Actions */}
-          <div className="absolute inset-x-0 bottom-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300 bg-gradient-to-t from-black/40 via-black/10 to-transparent">
+          <div className="absolute inset-x-0 bottom-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300 bg-linear-to-t from-black/40 via-black/10 to-transparent">
             <button
               onClick={handleAction}
               className="font-ui w-full bg-slate-900 text-white py-2.5 rounded-lg text-xs font-bold flex items-center justify-center gap-2 hover:bg-orange-600 transition-colors shadow-lg uppercase tracking-wider"

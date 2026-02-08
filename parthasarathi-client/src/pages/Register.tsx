@@ -31,7 +31,7 @@ function Register() {
                       <Sparkles className="size-5" />
                     </div>
                     <div>
-                      <h1 className="font-brand text-2xl font-bold text-amber-950 leading-tight">
+                      <h1 className="font-helper text-2xl font-bold text-amber-950 leading-tight">
                         Create Account
                       </h1>
                       <p className="text-sm text-amber-700/60 font-medium">
@@ -125,11 +125,11 @@ function Register() {
                   alt="Musical Heritage"
                   className="absolute inset-0 w-full h-full object-cover opacity-50 mix-blend-overlay"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-amber-950 via-transparent to-amber-950/20" />
+                <div className="absolute inset-0 bg-linear-to-t from-amber-950 via-transparent to-amber-950/20" />
                 <div className="relative h-full flex flex-col justify-end p-10 text-white">
                   <div className="space-y-2">
                     <div className="h-1 w-10 bg-orange-500 rounded-full mb-4" />
-                    <h2 className="font-brand text-3xl font-bold leading-tight tracking-tight">
+                    <h2 className="font-helper text-3xl font-bold leading-tight tracking-tight">
                       Your Journey
                       <br />
                       Starts Here.

@@ -65,7 +65,7 @@ const SupportTickets = () => {
 
         <main className="flex-1 p-8 lg:p-12">
           <div className="flex justify-between items-center mb-10">
-            <h1 className="font-brand text-3xl text-amber-950">
+            <h1 className="font-helper text-3xl font-semibold text-amber-950">
               Customer Tickets
             </h1>
             <button className="flex items-center gap-2 px-4 py-2 rounded-lg border border-amber-200 bg-white text-sm font-ui font-bold text-amber-900 hover:bg-amber-50 transition-all">

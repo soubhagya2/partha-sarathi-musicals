@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Lock, Mail, ArrowRight, ShieldCheck } from "lucide-react";
 import Header from "../components/layout/Header";
+import { toast } from "sonner";
 
 const SupportLogin = () => {
   const [email, setEmail] = useState("");
@@ -10,8 +11,12 @@ const SupportLogin = () => {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    // Logic for staff authentication would go here
-    navigate("/support/dashboard");
+    try {
+      // Logic for staff authentication would go here
+      navigate("/support/dashboard");
+    } catch (error) {
+      toast.error("Authentication failed. Please check your credentials.");
+    }
   };
 
   return (
@@ -27,7 +32,7 @@ const SupportLogin = () => {
                   <ShieldCheck className="size-6" />
                 </div>
                 <div>
-                  <h1 className="font-brand text-2xl text-amber-950">
+                  <h1 className="font-helper text-2xl font-semibold text-amber-950">
                     Staff Access
                   </h1>
                   <p className="font-ui text-xs text-amber-800/60 font-bold uppercase tracking-widest">

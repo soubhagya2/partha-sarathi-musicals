@@ -41,7 +41,7 @@ function CategoryCard({ name, imageUrl }: CategoryCardProps) {
 
         {/* Label - Positioned bottom-left with sharp Playfair font */}
         <div className="absolute bottom-4 left-4">
-          <p className="font-brand text-white font-bold text-xl tracking-wide drop-shadow-md">
+          <p className="font-helper text-white font-bold text-xl tracking-wide drop-shadow-md">
             {name}
           </p>
         </div>

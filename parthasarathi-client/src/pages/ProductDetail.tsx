@@ -201,7 +201,7 @@ const ProductDetail = () => {
                 {product.collection}
               </p>
             </div>
-            <h1 className="font-brand text-4xl lg:text-5xl text-amber-950 leading-tight">
+            <h1 className="font-helper text-4xl lg:text-5xl font-semibold text-amber-950 leading-tight">
               {product.name}
             </h1>
             <div className="flex flex-col sm:flex-row sm:items-center gap-4">
@@ -331,7 +331,7 @@ const ProductDetail = () => {
           {/* Story & History Section */}
           <section className="p-12 lg:p-20 rounded-3xl bg-amber-50/50 border border-orange-600/10">
             <div className="max-w-3xl mx-auto text-center space-y-8">
-              <h3 className="font-brand text-3xl lg:text-4xl text-amber-950">
+              <h3 className="font-helper text-3xl lg:text-4xl font-semibold text-amber-950">
                 The History of the Instrument
               </h3>
               <div className="w-20 h-0.5 bg-orange-600 mx-auto"></div>
@@ -346,7 +346,7 @@ const ProductDetail = () => {
           {/* Technical Specifications */}
           <section className="space-y-12">
             <div className="text-center">
-              <h3 className="font-brand text-3xl lg:text-4xl text-amber-950 mb-4">
+              <h3 className="font-helper text-3xl lg:text-4xl font-semibold text-amber-950 mb-4">
                 Technical Specifications
               </h3>
               <p className="text-amber-800/60 uppercase tracking-widest text-sm font-bold">
@@ -389,14 +389,14 @@ const ProductDetail = () => {
 
         {/* Certificate of Authenticity Section */}
         <section className="mt-32 p-12 bg-amber-950 text-amber-50 rounded-3xl relative overflow-hidden">
-          <div className="absolute right-0 top-0 w-1/3 h-full bg-gradient-to-l from-orange-600/20 to-transparent"></div>
+          <div className="absolute right-0 top-0 w-1/3 h-full bg-linear-to-l from-orange-600/20 to-transparent"></div>
           <div className="relative z-10 flex flex-col md:flex-row items-center gap-12">
             <div className="flex-1 space-y-6">
               <ShieldCheck className="text-orange-600 w-16 h-16" />
-              <h3 className="font-brand text-2xl lg:text-3xl">
+              <h3 className="font-helper text-2xl lg:text-3xl font-semibold">
                 Certificate of Authenticity
               </h3>
-              <p className="font-brand opacity-80 leading-relaxed text-base lg:text-lg">
+              <p className="font-helper opacity-80 leading-relaxed text-base lg:text-lg">
                 Every Professional Concert Grade instrument from Parthasarathi
                 Musical comes with a physical certificate signed by the master
                 artisan. This document guarantees the wood's age, the sourcing
@@ -409,7 +409,7 @@ const ProductDetail = () => {
                 <Award className="w-8 h-8" />
               </div>
               <div>
-                <p className="font-brand text-xl border-b border-white/20 pb-2 mb-2">
+                <p className="font-helper text-xl border-b border-white/20 pb-2 mb-2">
                   Original
                 </p>
                 <p className="text-xs uppercase tracking-widest opacity-60">
@@ -417,7 +417,7 @@ const ProductDetail = () => {
                 </p>
                 <p className="font-mono text-orange-600">#PM-2023-SIT-084</p>
               </div>
-              <p className="font-brand italic text-sm">
+              <p className="font-helper italic text-sm">
                 "Crafted with devotion"
               </p>
             </div>
@@ -426,7 +426,7 @@ const ProductDetail = () => {
 
         {/* Recommended / Cross Sell */}
         <section className="mt-32 pb-20">
-          <h4 className="font-brand text-2xl lg:text-3xl mb-12 text-center text-amber-950">
+          <h4 className="font-helper text-2xl lg:text-3xl font-semibold mb-12 text-center text-amber-950">
             Complete Your Setup
           </h4>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">

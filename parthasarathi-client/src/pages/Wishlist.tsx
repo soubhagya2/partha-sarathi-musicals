@@ -28,7 +28,9 @@ const Wishlist = () => {
           <div className="size-12 rounded-2xl bg-red-50 flex items-center justify-center text-red-500">
             <Heart className="size-6 fill-current" />
           </div>
-          <h1 className="font-brand text-4xl text-amber-950">My Wishlist</h1>
+          <h1 className="font-helper text-4xl font-semibold text-amber-950">
+            My Wishlist
+          </h1>
         </div>
 
         {wishlistItems.length > 0 ? (

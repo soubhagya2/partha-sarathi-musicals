@@ -33,7 +33,7 @@ function ForgotPassword() {
                       <Music className="size-8" />
                     </div>
                   </div>
-                  <h1 className="font-brand text-3xl text-center text-amber-900 mb-2">
+                  <h1 className="font-helper text-3xl text-center font-semibold text-amber-900 mb-2">
                     Reset Password
                   </h1>
                   <p className="font-ui text-center text-amber-800/60 mb-8 text-sm">
@@ -72,7 +72,7 @@ function ForgotPassword() {
                       <CheckCircle2 className="size-10" />
                     </div>
                   </div>
-                  <h2 className="font-brand text-3xl text-amber-900 mb-3">
+                  <h2 className="font-helper text-3xl font-semibold text-amber-900 mb-3">
                     Check Your Email
                   </h2>
                   <p className="font-ui text-amber-800/60 text-sm leading-relaxed mb-8">

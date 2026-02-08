@@ -30,7 +30,7 @@ const Support = () => {
         <Breadcrumbs items={[{ label: "Support Center" }]} />
 
         <div className="text-center mb-16">
-          <h1 className="font-brand text-5xl text-amber-950 mb-4">
+          <h1 className="font-helper text-5xl font-semibold text-amber-950 mb-4">
             Support Center
           </h1>
           <p className="font-ui text-lg text-amber-800/60">
@@ -81,7 +81,7 @@ const Support = () => {
         </div>
 
         <section className="max-w-3xl mx-auto">
-          <h2 className="font-brand text-3xl text-amber-950 mb-8 text-center">
+          <h2 className="font-helper text-3xl font-semibold text-amber-950 mb-8 text-center">
             Frequently Asked Questions
           </h2>
           <div className="space-y-4">

@@ -43,13 +43,51 @@ export const authMiddleware = async (
       sessionId: auth.sessionId,
     };
 
-    const user = await User.findOne({ clerkId: auth.userId }).lean();
+    // Try to find existing user linked to this Clerk account
+    let user = await User.findOne({ clerkId: auth.userId });
 
+    const SUPER_ADMIN_CLERK_ID = process.env.SUPER_ADMIN_CLERK_ID;
+    const SUPER_ADMIN_EMAIL = process.env.SUPER_ADMIN_EMAIL;
+    const SUPER_ADMIN_NAME = process.env.SUPER_ADMIN_NAME || "Super Admin";
+
+    // Bootstrap SUPER_ADMIN on first authenticated request if configured
     if (!user) {
-      return void res.status(401).json({
-        message: "Unauthorized - User not found",
-        code: "USER_NOT_FOUND",
-      });
+      // If this Clerk user is the configured SUPER_ADMIN, create the DB record on the fly
+      if (
+        SUPER_ADMIN_CLERK_ID &&
+        SUPER_ADMIN_EMAIL &&
+        auth.userId === SUPER_ADMIN_CLERK_ID
+      ) {
+        user = await User.create({
+          clerkId: auth.userId,
+          role: "SUPER_ADMIN",
+          name: SUPER_ADMIN_NAME,
+          email: SUPER_ADMIN_EMAIL,
+          isActive: true,
+          isBlocked: false,
+        });
+      } else {
+        return void res.status(401).json({
+          message: "Unauthorized - User not found",
+          code: "USER_NOT_FOUND",
+        });
+      }
+    }
+
+    // If a user exists but matches the configured SUPER_ADMIN, ensure role is elevated
+    if (
+      user &&
+      SUPER_ADMIN_CLERK_ID &&
+      SUPER_ADMIN_EMAIL &&
+      user.clerkId === SUPER_ADMIN_CLERK_ID &&
+      user.role !== "SUPER_ADMIN"
+    ) {
+      user.role = "SUPER_ADMIN";
+      user.email = SUPER_ADMIN_EMAIL;
+      user.name = SUPER_ADMIN_NAME;
+      user.isActive = true;
+      user.isBlocked = false;
+      await user.save();
     }
 
     if (user.isBlocked) {

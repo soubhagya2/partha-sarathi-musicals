@@ -22,7 +22,7 @@ const OrderConfirmation = () => {
               </div>
             </div>
 
-            <h1 className="font-brand text-4xl lg:text-5xl text-amber-900 mb-4">
+            <h1 className="font-helper text-4xl lg:text-5xl font-semibold text-amber-900 mb-4">
               Thank You for Your Order!
             </h1>
             <p className="font-ui text-lg text-amber-800/60 mb-8">

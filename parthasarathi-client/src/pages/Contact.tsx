@@ -5,7 +5,7 @@ import { Mail, Phone, MapPin, Send } from "lucide-react";
 
 function Contact() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-amber-50/50 via-white to-orange-50/30 scroll-smooth">
+    <div className="min-h-screen bg-linear-to-b from-amber-50/50 via-white to-orange-50/30 scroll-smooth">
       <Header />
       <main className="max-w-7xl mx-auto px-6 lg:px-10 py-20">
         <div className="mb-8">
@@ -13,7 +13,7 @@ function Contact() {
         </div>
 
         <div className="text-center mb-16">
-          <h1 className="font-brand text-5xl text-amber-950 mb-4">
+          <h1 className="font-helper text-5xl font-semibold text-amber-950 mb-4">
             Get in Touch
           </h1>
           <p className="font-ui text-lg text-amber-800/60 max-w-2xl mx-auto">
@@ -29,7 +29,7 @@ function Contact() {
               <div className="size-12 rounded-2xl bg-orange-100 flex items-center justify-center text-orange-600 mb-6">
                 <Mail className="size-6" />
               </div>
-              <h3 className="font-brand text-xl text-amber-950 mb-2">
+              <h3 className="font-helper text-xl font-semibold text-amber-950 mb-2">
                 Email Us
               </h3>
               <p className="font-ui text-sm text-amber-800/60">
@@ -40,7 +40,7 @@ function Contact() {
               <div className="size-12 rounded-2xl bg-orange-100 flex items-center justify-center text-orange-600 mb-6">
                 <Phone className="size-6" />
               </div>
-              <h3 className="font-brand text-xl text-amber-950 mb-2">
+              <h3 className="font-helper text-xl font-semibold text-amber-950 mb-2">
                 Call Us
               </h3>
               <p className="font-ui text-sm text-amber-800/60">
@@ -54,7 +54,7 @@ function Contact() {
               <div className="size-12 rounded-2xl bg-orange-100 flex items-center justify-center text-orange-600 mb-6 group-hover:bg-orange-600 group-hover:text-white transition-colors">
                 <MapPin className="size-6" />
               </div>
-              <h3 className="font-brand text-xl text-amber-950 mb-2">
+              <h3 className="font-helper text-xl font-semibold text-amber-950 mb-2">
                 Visit Us
               </h3>
               <p className="font-ui text-sm text-amber-800/60">
@@ -122,9 +122,11 @@ function Contact() {
         {/* Map Section */}
         <div id="stores" className="scroll-mt-28">
           <div className="mb-10 text-center">
-            <h2 className="font-brand text-4xl text-amber-950">Our Location</h2>
+            <h2 className="font-helper text-4xl font-semibold text-amber-950">
+              Our Location
+            </h2>
           </div>
-          <div className="rounded-[2.5rem] overflow-hidden border border-amber-100 shadow-xl shadow-orange-900/5 h-[400px]">
+          <div className="rounded-[2.5rem] overflow-hidden border border-amber-100 shadow-xl shadow-orange-900/5 h-96">
             <iframe
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3684.123456789!2d88.3639!3d22.5726!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a0277ad12345678%3A0x1234567890abcdef!2sKolkata%2C%20West%20Bengal!5e0!3m2!1sen!2sin!4v1698000000000!5m2!1sen!2sin"
               width="100%"

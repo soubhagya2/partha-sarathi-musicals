@@ -10,7 +10,7 @@ const ShippingPolicy = () => {
       <main className="max-w-4xl mx-auto px-6 py-16">
         <Breadcrumbs items={[{ label: "Shipping Policy" }]} />
 
-        <h1 className="font-brand text-4xl lg:text-5xl text-amber-950 mb-8">
+        <h1 className="font-helper text-4xl lg:text-5xl font-semibold text-amber-950 mb-8">
           Shipping Policy
         </h1>
 
@@ -89,7 +89,9 @@ const ShippingPolicy = () => {
           </section>
 
           <div className="p-8 rounded-3xl bg-orange-600 text-white mt-12">
-            <h3 className="font-brand text-2xl mb-2">Need it faster?</h3>
+            <h3 className="font-helper text-2xl font-semibold mb-2">
+              Need it faster?
+            </h3>
             <p className="text-white/80 text-sm mb-4">
               Expedited shipping options are available at checkout for most
               locations.

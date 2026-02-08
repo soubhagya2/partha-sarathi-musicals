@@ -15,7 +15,6 @@ const Products = () => {
   const [selectedFilter, setSelectedFilter] = useState(categoryParam || "All");
   const [sortBy, setSortBy] = useState("Featured");
   const [allProducts, setAllProducts] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (categoryParam) {
@@ -31,8 +30,6 @@ const Products = () => {
       } catch (error) {
         console.error("Failed to fetch products:", error);
         toast.error("Failed to load products");
-      } finally {
-        setLoading(false);
       }
     };
 
@@ -60,7 +57,7 @@ const Products = () => {
       <main className="max-w-7xl mx-auto px-6 lg:px-10 py-12">
         <Breadcrumbs items={[{ label: "Our Collection" }]} />
 
-        <h1 className="font-brand text-4xl lg:text-5xl text-amber-950 mb-8">
+        <h1 className="font-helper text-4xl lg:text-5xl font-semibold text-amber-950 mb-8">
           Our Collection
         </h1>
 
