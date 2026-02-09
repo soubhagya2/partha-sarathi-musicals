@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Helmet } from "react-helmet-async";
+import Head from "../components/Head";
 import { adminService } from "../services/adminService";
 import { toast } from "sonner";
 
@@ -25,9 +25,7 @@ export default function AdminSupport() {
 
   return (
     <div className="p-8">
-      <Helmet>
-        <title>Support Management - Admin</title>
-      </Helmet>
+      <Head title="Support Management - Admin" />
       <h1 className="text-3xl font-bold mb-8">Support Management</h1>
       <div className="bg-white border rounded-lg overflow-hidden shadow-sm">
         <table className="min-w-full">

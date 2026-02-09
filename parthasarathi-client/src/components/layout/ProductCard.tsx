@@ -54,7 +54,7 @@ function ProductCard({
     <div className="group relative bg-white rounded-2xl border border-slate-100 transition-all duration-300 hover:shadow-[0_12px_40px_rgba(0,0,0,0.08)] overflow-hidden">
       <Link to={`/product/${id}`} className="block">
         {/* Product Image Section - Reduced height */}
-        <div className="relative aspect-[4/3] overflow-hidden bg-linear-to-br from-slate-50 to-orange-50/20">
+        <div className="relative aspect-4/3 overflow-hidden bg-linear-to-br from-slate-50 to-orange-50/20">
           <img
             src={imageUrl}
             alt={name}
@@ -114,7 +114,7 @@ function ProductCard({
           </div>
 
           {/* Product Name - Fixed color */}
-          <h3 className="font-ui text-sm font-semibold text-amber-950 line-clamp-2 leading-snug min-h-[2.5rem] group-hover:text-orange-600 transition-colors">
+          <h3 className="font-ui text-sm font-semibold text-amber-950 line-clamp-2 leading-snug min-h-10 group-hover:text-orange-600 transition-colors">
             {name}
           </h3>
 

@@ -1,6 +1,6 @@
 import { Router, Response } from "express";
-import { authMiddleware, AuthRequest } from "../middleware/auth.middleware.js";
-import { isAdmin } from "../middleware/role.middleware.js";
+import { authMiddleware, AuthRequest } from "../middleware/authJWT.middleware";
+import { isAdmin } from "../middleware/role.middleware";
 
 const reviewRoutes = Router();
 

@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
-import { SignUp } from "@clerk/clerk-react";
 import { ShieldAlert, Zap } from "lucide-react";
 import Header from "../components/layout/Header";
+import { RegisterForm } from "../components/layout/RegisterForm";
 
 const SuperAdminRegister = () => {
   return (
@@ -11,7 +11,7 @@ const SuperAdminRegister = () => {
         {/* Left Side: Registration Form */}
         <div className="w-full lg:w-1/2 flex items-center justify-center p-6 lg:p-12 bg-slate-900">
           <div className="w-full max-w-md">
-            <div className="bg-slate-800 rounded-[2rem] shadow-2xl shadow-black border border-slate-700 p-8 lg:p-10">
+            <div className="bg-slate-800 rounded-4xl shadow-2xl shadow-black border border-slate-700 p-8 lg:p-10">
               <div className="flex items-center gap-3 mb-8">
                 <div className="size-12 rounded-xl bg-red-600 flex items-center justify-center text-white shadow-lg shadow-red-900/50">
                   <Zap className="size-6" />
@@ -27,12 +27,7 @@ const SuperAdminRegister = () => {
               </div>
 
               <div className="flex justify-center">
-                <SignUp
-                  routing="path"
-                  path="/super-admin/register"
-                  forceRedirectUrl="/super-admin/dashboard"
-                  signInUrl="/super-admin/login"
-                />
+                <RegisterForm />
               </div>
 
               <div className="mt-6 text-center">
@@ -54,7 +49,7 @@ const SuperAdminRegister = () => {
         {/* Right Side: Visual */}
         <div className="hidden lg:block lg:w-1/2 relative bg-black">
           <div className="absolute inset-0 opacity-20">
-            <div className="h-full w-full bg-[radial-gradient(#ff0000_1px,transparent_1px)] [background-size:20px_20px]"></div>
+            <div className="h-full w-full bg-[radial-gradient(#ff0000_1px,transparent_1px)] bg-size-[20px_20px]"></div>
           </div>
           <div className="relative h-full flex items-center justify-center p-20">
             <div className="space-y-6">

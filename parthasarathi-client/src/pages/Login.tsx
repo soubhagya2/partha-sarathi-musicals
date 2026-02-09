@@ -1,54 +1,41 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import {
-  Mail,
-  Lock,
-  ArrowRight,
-  Music,
-  Eye,
-  EyeOff,
-  AlertCircle,
-} from "lucide-react";
+import { useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuthContext } from "../context/AuthContext";
+import { Music, Lock } from "lucide-react";
 import Header from "../components/layout/Header";
 import Footer from "../components/layout/Footer";
+import { LoginForm } from "../components/layout/LoginForm";
 
 function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
-  const [errors, setErrors] = useState({ email: "", password: "" });
+  const navigate = useNavigate();
+  const { isLoaded, isSignedIn, role, isLoading } = useAuthContext();
 
-  const validateForm = () => {
-    const newErrors = { email: "", password: "" };
-    let isValid = true;
-
-    if (!email) {
-      newErrors.email = "Required";
-      isValid = false;
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
-      newErrors.email = "Invalid email format";
-      isValid = false;
+  // Redirect if already logged in
+  useEffect(() => {
+    if (isLoaded && isSignedIn && !isLoading && role) {
+      // Redirect based on user role synced from backend
+      if (role === "SUPER_ADMIN") {
+        navigate("/super-admin/dashboard");
+      } else if (role === "ADMIN") {
+        navigate("/admin/dashboard");
+      } else if (role === "SUPPORT") {
+        navigate("/support/dashboard");
+      } else {
+        navigate("/");
+      }
     }
+  }, [isLoaded, isSignedIn, isLoading, role, navigate]);
 
-    if (!password) {
-      newErrors.password = "Required";
-      isValid = false;
-    } else if (password.length < 6) {
-      newErrors.password = "Min 6 characters";
-      isValid = false;
-    }
-
-    setErrors(newErrors);
-    return isValid;
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (validateForm()) {
-      console.log("Login attempt with:", { email, password, rememberMe });
-    }
-  };
+  if (!isLoaded) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#fffaf5]">
+        <div className="text-center">
+          <Music className="size-12 text-orange-600 animate-spin mx-auto mb-4" />
+          <p className="text-amber-950 font-bold">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col bg-[#fffaf5]">
@@ -57,11 +44,10 @@ function Login() {
         <div className="w-full max-w-5xl">
           <div className="bg-white rounded-3xl shadow-md border border-amber-100 overflow-hidden">
             <div className="grid lg:grid-cols-12">
-              {/* Left Side - Form (7 Columns) */}
               <div className="lg:col-span-5 p-6 lg:p-10 flex flex-col justify-center bg-white">
                 <div className="max-w-md mx-auto w-full">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="size-10 rounded-lg bg-orange-600 flex items-center justify-center text-white ">
+                  <div className="flex items-center gap-3 mb-8">
+                    <div className="size-10 rounded-lg bg-orange-600 flex items-center justify-center text-white">
                       <Music className="size-5" />
                     </div>
                     <div>
@@ -74,143 +60,7 @@ function Login() {
                     </div>
                   </div>
 
-                  <form onSubmit={handleSubmit} className="space-y-4">
-                    {/* Email Field */}
-                    <div className="space-y-1.5">
-                      <label className="text-xs font-bold text-amber-950/40 uppercase tracking-wider ml-1">
-                        Email Address
-                      </label>
-                      <div className="relative group">
-                        <Mail
-                          className={`absolute left-4 top-1/2 -translate-y-1/2 size-4.5 transition-colors ${errors.email ? "text-red-400" : "text-amber-400 group-focus-within:text-orange-500"}`}
-                        />
-                        <input
-                          type="email"
-                          value={email}
-                          onChange={(e) => {
-                            setEmail(e.target.value);
-                            setErrors({ ...errors, email: "" });
-                          }}
-                          placeholder="Enter your email"
-                          className={`w-full pl-11 pr-4 py-3 rounded-xl border-2 transition-all outline-none text-sm ${
-                            errors.email
-                              ? "border-red-100 bg-red-50/30 focus:border-red-400"
-                              : "border-amber-50 bg-amber-50/50 focus:bg-white focus:border-orange-500"
-                          }`}
-                        />
-                      </div>
-                      {errors.email && (
-                        <p className="text-[11px] text-red-500 font-bold ml-1">
-                          {errors.email}
-                        </p>
-                      )}
-                    </div>
-
-                    {/* Password Field */}
-                    <div className="space-y-1.5">
-                      <div className="flex justify-between items-center px-1">
-                        <label className="text-xs font-bold text-amber-950/40 uppercase tracking-wider">
-                          Password
-                        </label>
-                        <Link
-                          to="/forgot-password"
-                          size-sm
-                          className="text-[11px] font-bold text-orange-600 hover:text-orange-700 transition-colors"
-                        >
-                          Forgot?
-                        </Link>
-                      </div>
-                      <div className="relative group">
-                        <Lock
-                          className={`absolute left-4 top-1/2 -translate-y-1/2 size-4.5 transition-colors ${errors.password ? "text-red-400" : "text-amber-400 group-focus-within:text-orange-500"}`}
-                        />
-                        <input
-                          type={showPassword ? "text" : "password"}
-                          value={password}
-                          onChange={(e) => {
-                            setPassword(e.target.value);
-                            setErrors({ ...errors, password: "" });
-                          }}
-                          placeholder="••••••••"
-                          className={`w-full pl-11 pr-11 py-3 rounded-xl border-2 transition-all outline-none text-sm ${
-                            errors.password
-                              ? "border-red-100 bg-red-50/30 focus:border-red-400"
-                              : "border-amber-50 bg-amber-50/50 focus:bg-white focus:border-orange-500"
-                          }`}
-                        />
-                        <button
-                          type="button"
-                          onClick={() => setShowPassword(!showPassword)}
-                          className="absolute right-4 top-1/2 -translate-y-1/2 text-amber-400 hover:text-orange-600"
-                        >
-                          {showPassword ? (
-                            <EyeOff className="size-4.5" />
-                          ) : (
-                            <Eye className="size-4.5" />
-                          )}
-                        </button>
-                      </div>
-                      {errors.password && (
-                        <p className="text-[11px] text-red-500 font-bold ml-1">
-                          {errors.password}
-                        </p>
-                      )}
-                    </div>
-
-                    <div className="flex items-center gap-2 pt-1">
-                      <input
-                        type="checkbox"
-                        id="remember"
-                        checked={rememberMe}
-                        onChange={(e) => setRememberMe(e.target.checked)}
-                        className="size-4 accent-orange-600"
-                      />
-                      <label
-                        htmlFor="remember"
-                        className="text-xs font-medium text-amber-800/70 cursor-pointer"
-                      >
-                        Stay signed in
-                      </label>
-                    </div>
-
-                    <button
-                      type="submit"
-                      className="w-full bg-amber-950 text-white py-3.5 rounded-xl font-bold text-sm hover:bg-orange-600 transition-all shadow-lg shadow-amber-950/20 active:scale-[0.98] flex items-center justify-center gap-2"
-                    >
-                      Sign In Account
-                      <ArrowRight className="size-4" />
-                    </button>
-                  </form>
-
-                  <div className="relative my-6">
-                    <div className="absolute inset-0 flex items-center">
-                      <div className="w-full border-t border-amber-100"></div>
-                    </div>
-                    <div className="relative flex justify-center">
-                      <span className="bg-white px-3 text-[10px] font-bold text-amber-300 uppercase tracking-widest">
-                        Or login with
-                      </span>
-                    </div>
-                  </div>
-
-                  <button className="w-full border-2 border-amber-100 py-2.5 rounded-xl font-bold text-amber-950 text-xs hover:bg-amber-50 transition-all flex items-center justify-center gap-2">
-                    <img
-                      src="https://www.svgrepo.com/show/475656/google-color.svg"
-                      className="size-4"
-                      alt="Google"
-                    />
-                    Continue with Google
-                  </button>
-
-                  <p className="mt-6 text-center text-xs font-medium text-amber-800/60">
-                    New here?{" "}
-                    <Link
-                      to="/register"
-                      className="text-orange-600 font-bold hover:underline"
-                    >
-                      Create an account
-                    </Link>
-                  </p>
+                  <LoginForm />
 
                   <div className="mt-8 pt-6 border-t border-amber-50 flex justify-center gap-6">
                     <Link
@@ -230,7 +80,7 @@ function Login() {
               </div>
 
               {/* Right Side - Image (5 Columns) */}
-              <div className="hidden lg:block lg:col-span-7 relative bg-amber-950 min-h-[550px]">
+              <div className="hidden lg:block lg:col-span-7 relative bg-amber-950 min-h-137.5">
                 <img
                   src="https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=800&q=80"
                   alt="Instruments"
@@ -264,5 +114,4 @@ function Login() {
     </div>
   );
 }
-
 export default Login;

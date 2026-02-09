@@ -7,7 +7,6 @@ import {
   ShoppingCart,
   ShieldCheck,
   Truck,
-  ChevronRight,
   Minus,
   Plus,
   Briefcase,

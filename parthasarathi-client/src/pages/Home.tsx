@@ -3,7 +3,6 @@ import Hero from "../components/layout/Hero";
 import Footer from "../components/layout/Footer";
 import CategoryCard from "../components/layout/CategoryCard";
 import ProductCard from "../components/layout/ProductCard";
-import FeatureCard from "../components/layout/FeatureCards";
 import { Shield, Users, Lock, Truck, Quote } from "lucide-react";
 
 // If you had props, define an interface like this:
@@ -147,7 +146,7 @@ function Home() {
         {/* Why Choose Us Section */}
         <section className="px-6 lg:px-10 py-16 bg-[#f4f0e7] rounded-3xl mx-6 mb-16">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-            {features.map((feature, i) => (
+            {features.map((feature) => (
               <div
                 key={feature.title}
                 className="flex flex-col items-center text-center gap-4"
@@ -168,7 +167,7 @@ function Home() {
 
         {/* Testimonials Section */}
         <section className="px-6 lg:px-10 py-16 text-center max-w-4xl mx-auto">
-          <h2 className="font-helper text-3xl font-bold mb-12 text-[#1c180d]">
+          <h2 className="font-brand tracking-widest text-3xl font-bold mb-12 text-[#1c180d]">
             Voices of Music
           </h2>
           <div className="relative p-10 bg-white rounded-2xl border border-[#f4f0e7]">

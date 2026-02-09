@@ -1,6 +1,6 @@
 import { Router, Response } from "express";
-import { authMiddleware, AuthRequest } from "../middleware/auth.middleware.js";
-import { isAdmin } from "../middleware/role.middleware.js";
+import { authMiddleware, AuthRequest } from "../middleware/authJWT.middleware";
+import { isAdmin, isSupport } from "../middleware/role.middleware";
 
 const supportTicketRoutes = Router();
 
@@ -36,8 +36,9 @@ supportTicketRoutes.get(
 supportTicketRoutes.post(
   "/:ticketId/reply",
   authMiddleware,
+  isSupport,
   (req: AuthRequest, res: Response) => {
-    // Add reply to ticket
+    // Add reply to ticket (SUPPORT+ role required; see seed.js)
     const { ticketId } = req.params;
     res.json({ message: `Reply added to ticket ${ticketId}` });
   },
@@ -46,8 +47,9 @@ supportTicketRoutes.post(
 supportTicketRoutes.post(
   "/:ticketId/close",
   authMiddleware,
+  isSupport,
   (req: AuthRequest, res: Response) => {
-    // Close ticket
+    // Close ticket (SUPPORT+ role required)
     const { ticketId } = req.params;
     res.json({ message: `Ticket ${ticketId} closed` });
   },

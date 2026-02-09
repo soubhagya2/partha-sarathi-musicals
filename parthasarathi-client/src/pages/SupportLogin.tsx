@@ -1,23 +1,39 @@
-import { useState } from "react";
+import { useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { Lock, Mail, ArrowRight, ShieldCheck } from "lucide-react";
+import { useAuthContext } from "../context/AuthContext";
+import { ShieldCheck, Music } from "lucide-react";
 import Header from "../components/layout/Header";
-import { toast } from "sonner";
+import { LoginForm } from "../components/layout/LoginForm";
 
 const SupportLogin = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const { isLoaded, isSignedIn, role, isLoading } = useAuthContext();
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      // Logic for staff authentication would go here
-      navigate("/support/dashboard");
-    } catch (error) {
-      toast.error("Authentication failed. Please check your credentials.");
+  // Redirect if already logged in
+  useEffect(() => {
+    if (isLoaded && isSignedIn && !isLoading && role) {
+      if (role === "SUPER_ADMIN") {
+        navigate("/super-admin/dashboard");
+      } else if (role === "ADMIN") {
+        navigate("/admin/dashboard");
+      } else if (role === "SUPPORT") {
+        navigate("/support/dashboard");
+      } else {
+        navigate("/");
+      }
     }
-  };
+  }, [isLoaded, isSignedIn, isLoading, role, navigate]);
+
+  if (!isLoaded) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-amber-50/30">
+        <div className="text-center">
+          <Music className="size-12 text-amber-600 animate-spin mx-auto mb-4" />
+          <p className="text-amber-950 font-bold">Loading Support Portal...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="h-screen flex flex-col bg-white overflow-hidden">
@@ -26,7 +42,7 @@ const SupportLogin = () => {
         {/* Left Side: Login Form */}
         <div className="w-full lg:w-1/2 flex items-center justify-center p-6 lg:p-12 bg-amber-50/30">
           <div className="w-full max-w-md">
-            <div className="bg-white rounded-[2rem] shadow-xl shadow-amber-900/5 border border-amber-100 p-8 lg:p-10">
+            <div className="bg-white rounded-4xl shadow-xl shadow-amber-900/5 border border-amber-100 p-8 lg:p-10">
               <div className="flex items-center gap-3 mb-8">
                 <div className="size-12 rounded-xl bg-amber-950 flex items-center justify-center text-white">
                   <ShieldCheck className="size-6" />
@@ -41,49 +57,7 @@ const SupportLogin = () => {
                 </div>
               </div>
 
-              <form onSubmit={handleLogin} className="space-y-5">
-                <div className="space-y-1.5">
-                  <label className="font-ui text-xs font-bold text-amber-900/40 uppercase tracking-widest ml-1">
-                    Work Email
-                  </label>
-                  <div className="relative group">
-                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 size-5 text-amber-400 group-focus-within:text-amber-950 transition-colors" />
-                    <input
-                      type="email"
-                      required
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="staff@parthasarathi.com"
-                      className="w-full pl-12 pr-4 py-3.5 rounded-xl border-2 border-amber-50 bg-amber-50/50 focus:bg-white focus:border-amber-950 outline-none transition-all font-ui text-sm"
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="font-ui text-xs font-bold text-amber-900/40 uppercase tracking-widest ml-1">
-                    Password
-                  </label>
-                  <div className="relative group">
-                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 size-5 text-amber-400 group-focus-within:text-amber-950 transition-colors" />
-                    <input
-                      type="password"
-                      required
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      placeholder="••••••••"
-                      className="w-full pl-12 pr-4 py-3.5 rounded-xl border-2 border-amber-50 bg-amber-50/50 focus:bg-white focus:border-amber-950 outline-none transition-all font-ui text-sm"
-                    />
-                  </div>
-                </div>
-
-                <button
-                  type="submit"
-                  className="w-full bg-amber-950 text-white py-4 rounded-xl font-ui font-bold text-sm shadow-lg shadow-amber-950/20 hover:bg-black transition-all flex items-center justify-center gap-2 group"
-                >
-                  Authorize Access
-                  <ArrowRight className="size-4 group-hover:translate-x-1 transition-transform" />
-                </button>
-              </form>
+              <LoginForm />
 
               <div className="mt-6 text-center">
                 <Link

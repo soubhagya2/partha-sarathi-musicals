@@ -1,14 +1,14 @@
 import { Router, Response } from "express";
-import { authMiddleware, AuthRequest } from "../middleware/auth.middleware.js";
-import { isAdmin } from "../middleware/role.middleware.js";
+import { authMiddleware, AuthRequest } from "../middleware/authJWT.middleware";
+import { isSuperAdmin } from "../middleware/role.middleware";
 
 const rolePermissionRoutes = Router();
 
-// Admin only routes
+// Super Admin only routes (role:manage is SUPER_ADMIN-only per seed.js)
 rolePermissionRoutes.get(
   "/roles",
   authMiddleware,
-  isAdmin,
+  isSuperAdmin,
   (req: AuthRequest, res: Response) => {
     // Get all roles
     res.json({ message: "Get all roles" });
@@ -18,7 +18,7 @@ rolePermissionRoutes.get(
 rolePermissionRoutes.post(
   "/roles",
   authMiddleware,
-  isAdmin,
+  isSuperAdmin,
   (req: AuthRequest, res: Response) => {
     // Create new role
     res.status(201).json({ message: "Role created" });
@@ -28,7 +28,7 @@ rolePermissionRoutes.post(
 rolePermissionRoutes.get(
   "/roles/:roleId",
   authMiddleware,
-  isAdmin,
+  isSuperAdmin,
   (req: AuthRequest, res: Response) => {
     // Get role details
     const { roleId } = req.params;
@@ -39,7 +39,7 @@ rolePermissionRoutes.get(
 rolePermissionRoutes.put(
   "/roles/:roleId",
   authMiddleware,
-  isAdmin,
+  isSuperAdmin,
   (req: AuthRequest, res: Response) => {
     // Update role
     const { roleId } = req.params;
@@ -50,7 +50,7 @@ rolePermissionRoutes.put(
 rolePermissionRoutes.delete(
   "/roles/:roleId",
   authMiddleware,
-  isAdmin,
+  isSuperAdmin,
   (req: AuthRequest, res: Response) => {
     // Delete role
     const { roleId } = req.params;
@@ -61,7 +61,7 @@ rolePermissionRoutes.delete(
 rolePermissionRoutes.get(
   "/permissions",
   authMiddleware,
-  isAdmin,
+  isSuperAdmin,
   (req: AuthRequest, res: Response) => {
     // Get all permissions
     res.json({ message: "Get all permissions" });
@@ -71,7 +71,7 @@ rolePermissionRoutes.get(
 rolePermissionRoutes.post(
   "/permissions",
   authMiddleware,
-  isAdmin,
+  isSuperAdmin,
   (req: AuthRequest, res: Response) => {
     // Create new permission
     res.status(201).json({ message: "Permission created" });
@@ -81,7 +81,7 @@ rolePermissionRoutes.post(
 rolePermissionRoutes.get(
   "/permissions/:permissionId",
   authMiddleware,
-  isAdmin,
+  isSuperAdmin,
   (req: AuthRequest, res: Response) => {
     // Get permission details
     const { permissionId } = req.params;
@@ -92,7 +92,7 @@ rolePermissionRoutes.get(
 rolePermissionRoutes.put(
   "/permissions/:permissionId",
   authMiddleware,
-  isAdmin,
+  isSuperAdmin,
   (req: AuthRequest, res: Response) => {
     // Update permission
     const { permissionId } = req.params;
@@ -103,7 +103,7 @@ rolePermissionRoutes.put(
 rolePermissionRoutes.delete(
   "/permissions/:permissionId",
   authMiddleware,
-  isAdmin,
+  isSuperAdmin,
   (req: AuthRequest, res: Response) => {
     // Delete permission
     const { permissionId } = req.params;
@@ -114,7 +114,7 @@ rolePermissionRoutes.delete(
 rolePermissionRoutes.post(
   "/roles/:roleId/permissions",
   authMiddleware,
-  isAdmin,
+  isSuperAdmin,
   (req: AuthRequest, res: Response) => {
     // Assign permissions to role
     const { roleId } = req.params;

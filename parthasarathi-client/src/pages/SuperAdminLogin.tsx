@@ -1,17 +1,48 @@
-import { Link } from "react-router-dom";
-import { SignIn } from "@clerk/clerk-react";
-import { ShieldAlert, Zap } from "lucide-react";
+import { useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuthContext } from "../context/AuthContext";
+import { ShieldAlert, Zap, Music } from "lucide-react";
 import Header from "../components/layout/Header";
+import { LoginForm } from "../components/layout/LoginForm";
 
 const SuperAdminLogin = () => {
+  const navigate = useNavigate();
+  const { isLoaded, isSignedIn, role, isLoading } = useAuthContext();
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (isLoaded && isSignedIn && !isLoading && role) {
+      if (role === "SUPER_ADMIN") {
+        navigate("/super-admin/dashboard");
+      } else if (role === "ADMIN") {
+        navigate("/admin/dashboard");
+      } else if (role === "SUPPORT") {
+        navigate("/support/dashboard");
+      } else {
+        navigate("/");
+      }
+    }
+  }, [isLoaded, isSignedIn, isLoading, role, navigate]);
+
+  if (!isLoaded) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-950">
+        <div className="text-center">
+          <Music className="size-12 text-red-600 animate-spin mx-auto mb-4" />
+          <p className="text-white font-bold">Accessing Terminal...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="h-screen flex flex-col bg-slate-950 overflow-hidden">
-      <Header />
+      <Header variant="dark" />
       <main className="flex-1 flex overflow-hidden">
         {/* Left Side: Login Form */}
         <div className="w-full lg:w-1/2 flex items-center justify-center p-6 lg:p-12 bg-slate-900">
           <div className="w-full max-w-md">
-            <div className="bg-slate-800 rounded-[2rem] shadow-2xl shadow-black border border-slate-700 p-8 lg:p-10">
+            <div className="bg-slate-800 rounded-4xl shadow-2xl shadow-black border border-slate-700 p-8 lg:p-10">
               <div className="flex items-center gap-3 mb-8">
                 <div className="size-12 rounded-xl bg-red-600 flex items-center justify-center text-white shadow-lg shadow-red-900/50">
                   <Zap className="size-6" />
@@ -26,14 +57,7 @@ const SuperAdminLogin = () => {
                 </div>
               </div>
 
-              <div className="flex justify-center">
-                <SignIn
-                  routing="path"
-                  path="/super-admin/login"
-                  forceRedirectUrl="/super-admin/dashboard"
-                  signUpUrl="/super-admin/register"
-                />
-              </div>
+              <LoginForm />
 
               <div className="mt-6 text-center">
                 <Link
@@ -54,7 +78,7 @@ const SuperAdminLogin = () => {
         {/* Right Side: Visual */}
         <div className="hidden lg:block lg:w-1/2 relative bg-black">
           <div className="absolute inset-0 opacity-20">
-            <div className="h-full w-full bg-[radial-gradient(#ff0000_1px,transparent_1px)] [background-size:20px_20px]"></div>
+            <div className="h-full w-full bg-[radial-gradient(#ff0000_1px,transparent_1px)] bg-size-[20px_20px]"></div>
           </div>
           <div className="relative h-full flex items-center justify-center p-20">
             <div className="space-y-6">

@@ -1,6 +1,6 @@
 import { Router, Response } from "express";
-import { isAdmin } from "../middleware/role.middleware.js";
-import { authMiddleware, AuthRequest } from "../middleware/auth.middleware.js";
+import { isAdmin } from "../middleware/role.middleware";
+import { authMiddleware, AuthRequest } from "../middleware/authJWT.middleware";
 
 const newsletterRoutes = Router();
 

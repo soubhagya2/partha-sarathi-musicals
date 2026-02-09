@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
-import { Helmet } from "react-helmet-async";
+import { useAuth } from "../context/AuthContext";
+import Head from "../components/Head";
 import {
   ShieldAlert,
   Users,
@@ -12,10 +13,12 @@ import {
   Settings,
   RefreshCw,
   Trash2,
+  LogOut,
 } from "lucide-react";
 import Header from "../components/layout/Header";
 import { adminService } from "../services/adminService";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 interface AdminUser {
   _id?: string;
@@ -29,6 +32,8 @@ interface AdminUser {
 }
 
 const SuperAdminDashboard = () => {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({
     users: "0",
@@ -40,6 +45,13 @@ const SuperAdminDashboard = () => {
   const [systemSettings, setSystemSettings] = useState({
     maintenanceMode: false,
   });
+
+  // Redirect if not SUPER_ADMIN
+  useEffect(() => {
+    if (user && user.role !== "SUPER_ADMIN") {
+      navigate("/");
+    }
+  }, [user, navigate]);
 
   const fetchData = async () => {
     try {
@@ -61,6 +73,15 @@ const SuperAdminDashboard = () => {
     fetchData();
   }, []);
 
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate("/super-admin/login");
+    } catch (error) {
+      toast.error("Failed to logout");
+    }
+  };
+
   const allPermissions = [
     { id: "user:write", label: "Manage Users" },
     { id: "product:write", label: "Manage Products" },
@@ -77,6 +98,20 @@ const SuperAdminDashboard = () => {
         admin.email.toLowerCase().includes(searchTerm.toLowerCase()),
     );
   }, [admins, searchTerm]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-linear-to-br from-red-50 to-red-100">
+        <Header variant="dark" />
+        <div className="flex items-center justify-center h-96">
+          <div className="text-center">
+            <RefreshCw className="size-12 text-red-600 animate-spin mx-auto mb-4" />
+            <p className="text-red-900 font-bold">Loading dashboard...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const togglePermission = (adminId: string, permissionId: string) => {
     setAdmins((prev) =>
@@ -145,9 +180,7 @@ const SuperAdminDashboard = () => {
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">
-      <Helmet>
-        <title>Super Admin | Parthasarathi Musical</title>
-      </Helmet>
+      <Head title="Super Admin | Parthasarathi Musical" />
       <Header />
 
       <main className="flex-1 p-6 lg:p-12 max-w-7xl mx-auto w-full">
@@ -159,16 +192,37 @@ const SuperAdminDashboard = () => {
             <h1 className="font-helper text-4xl font-semibold text-slate-900">
               Super Admin Control
             </h1>
-            <p className="text-slate-500 font-ui text-sm uppercase tracking-widest font-bold">
-              System-Wide Authority
-            </p>
+            <div className="flex items-center gap-2">
+              <p className="text-slate-500 font-ui text-sm uppercase tracking-widest font-bold">
+                System-Wide Authority
+              </p>
+              {user && (
+                <>
+                  <span className="text-slate-300">|</span>
+                  <p className="text-slate-600 font-ui text-sm font-bold">
+                    Logged in as: {user.name}
+                  </p>
+                </>
+              )}
+            </div>
           </div>
-          <button
-            onClick={fetchData}
-            className="ml-auto p-3 rounded-xl bg-white border border-slate-200 text-slate-400 hover:text-slate-900 transition-colors"
-          >
-            <RefreshCw className={`size-5 ${loading ? "animate-spin" : ""}`} />
-          </button>
+          <div className="ml-auto flex items-center gap-3">
+            <button
+              onClick={handleLogout}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white border border-slate-200 text-slate-600 hover:text-slate-900 transition-colors"
+            >
+              <LogOut className="size-4" />
+              <span className="text-sm font-ui font-bold">Logout</span>
+            </button>
+            <button
+              onClick={fetchData}
+              className="p-3 rounded-xl bg-white border border-slate-200 text-slate-400 hover:text-slate-900 transition-colors"
+            >
+              <RefreshCw
+                className={`size-5 ${loading ? "animate-spin" : ""}`}
+              />
+            </button>
+          </div>
         </div>
 
         {/* Super Powers Stats */}

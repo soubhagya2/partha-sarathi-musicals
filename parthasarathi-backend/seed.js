@@ -1,24 +1,26 @@
+// seed.js
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+import bcrypt from "bcryptjs";
 
-dotenv.config({ quiet: true });
+// Load env
+dotenv.config();
 
-// ===== DATABASE CONNECTION =====
+// ================= DATABASE CONNECT =================
 const connectDB = async () => {
   try {
     const mongoURI = process.env.MONGODB_URI;
-    if (!mongoURI) {
-      throw new Error("MONGODB_URI environment variable is not set");
-    }
+    if (!mongoURI) throw new Error("❌ MONGODB_URI not set");
+
     await mongoose.connect(mongoURI);
-    console.log("MongoDB Connected");
+    console.log("✅ MongoDB Connected");
   } catch (err) {
-    console.error("Connection failed:", err.message);
+    console.error("❌ DB Connection Failed:", err.message);
     process.exit(1);
   }
 };
 
-// ===== SCHEMA DEFINITIONS =====
+// ================= ROLE PERMISSION SCHEMA =================
 const rolePermissionSchema = new mongoose.Schema(
   {
     role: {
@@ -26,125 +28,120 @@ const rolePermissionSchema = new mongoose.Schema(
       enum: ["SUPER_ADMIN", "ADMIN", "SUPPORT", "CUSTOMER"],
       required: true,
       unique: true,
-      index: true,
     },
-    permissions: [
-      {
-        type: String,
-        required: true,
-      },
-    ],
-    isSystemRole: {
-      type: Boolean,
-      default: true,
-    },
+    permissions: [{ type: String, required: true }],
+    isSystemRole: { type: Boolean, default: true },
   },
   { timestamps: true },
 );
 
+const RolePermission = mongoose.model("RolePermission", rolePermissionSchema);
+
+// ================= USER SCHEMA (MATCHES YOUR TS MODEL) =================
 const userSchema = new mongoose.Schema(
   {
-    clerkId: { type: String, required: true, unique: true, index: true },
+    email: { type: String, required: true, lowercase: true, unique: true },
+    name: { type: String, required: true },
+    password: { type: String },
+    authProvider: { type: String, enum: ["local", "google"], default: "local" },
+    googleId: { type: String, sparse: true },
+    phone: String,
+    avatar: String,
     role: {
       type: String,
       enum: ["SUPER_ADMIN", "ADMIN", "SUPPORT", "CUSTOMER"],
       default: "CUSTOMER",
       required: true,
     },
-    name: { type: String, required: true, trim: true },
-    email: { type: String, required: true, lowercase: true, unique: true },
-    phone: { type: String },
-    avatar: { type: String },
+    emailVerified: { type: Boolean, default: false },
+    emailVerificationToken: String,
+    emailVerificationTokenExpiry: Date,
+    passwordResetToken: String,
+    passwordResetTokenExpiry: Date,
+    refreshTokenFamily: [String],
     isActive: { type: Boolean, default: true },
     isBlocked: { type: Boolean, default: false },
-    lastLogin: { type: Date },
+    lastLogin: Date,
+    metadata: mongoose.Schema.Types.Mixed,
   },
   { timestamps: true },
 );
 
-const RolePermission = mongoose.model("RolePermission", rolePermissionSchema);
+// Hash password
+userSchema.pre("save", async function () {
+  if (!this.password || !this.isModified("password")) return;
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+});
+
+// Ensure ONLY ONE SUPER_ADMIN
+userSchema.index(
+  { role: 1 },
+  { unique: true, partialFilterExpression: { role: "SUPER_ADMIN" } },
+);
+
 const User = mongoose.model("User", userSchema);
 
-// ===== SEED DATA =====
+// ================= ROLE PERMISSIONS DATA =================
 const ROLE_PERMISSIONS = [
   {
     role: "SUPER_ADMIN",
     permissions: [
-      // User management
       "user:read",
       "user:write",
       "user:delete",
-      // Product management
       "product:read",
       "product:write",
       "product:delete",
-      // Order management
       "order:read",
       "order:update",
       "order:cancel",
       "order:refund",
-      // Payment & finance
       "payment:read",
       "payment:refund",
-      // Support
       "support:read",
       "support:reply",
       "support:close",
-      // Marketing
       "coupon:manage",
       "banner:manage",
       "offer:manage",
-      // System
       "activity:read",
       "role:manage",
-      // Admin operations
       "admin:access",
       "analytics:view",
       "settings:manage",
       "reports:view",
     ],
-    isSystemRole: true,
   },
   {
     role: "ADMIN",
     permissions: [
-      // Product management
       "product:read",
       "product:write",
       "product:delete",
-      // Order management
       "order:read",
       "order:update",
       "order:cancel",
-      // Payment & finance
       "payment:read",
-      // Support
       "support:read",
       "support:reply",
-      // Marketing
       "coupon:manage",
       "banner:manage",
       "offer:manage",
-      // Admin operations
       "admin:access",
       "analytics:view",
       "reports:view",
     ],
-    isSystemRole: true,
   },
   {
     role: "SUPPORT",
     permissions: [
-      // Support
       "support:read",
       "support:reply",
       "support:close",
-      // Order management (view only)
       "order:read",
-      // Activity
       "activity:read",
     ],
-    isSystemRole: true,
   },
   {
     role: "CUSTOMER",
@@ -155,73 +152,73 @@ const ROLE_PERMISSIONS = [
       "support:reply",
       "activity:read",
     ],
-    isSystemRole: true,
   },
 ];
 
+// ================= ADMIN USERS FROM ENV =================
 const SUPER_ADMIN_USER = {
-  clerkId: process.env.SUPER_ADMIN_CLERK_ID,
-  role: "SUPER_ADMIN",
-  name: process.env.SUPER_ADMIN_NAME,
+  name: process.env.SUPER_ADMIN_NAME || "Parthasarathi Musical",
   email: process.env.SUPER_ADMIN_EMAIL,
-  phone: process.env.SUPER_ADMIN_PHONE,
-  isActive: true,
-  isBlocked: false,
-  lastLogin: new Date(),
+  password: process.env.SUPER_ADMIN_PASSWORD,
+  role: "SUPER_ADMIN",
 };
 
-// ===== SEED FUNCTION =====
+const ADMIN_USER = {
+  name: process.env.ADMIN_NAME || "Admin User",
+  email: process.env.ADMIN_EMAIL,
+  password: process.env.ADMIN_PASSWORD,
+  role: "ADMIN",
+};
+
+// ================= SEED FUNCTION =================
 const seedDatabase = async () => {
   try {
-    console.log("Starting database seeding...\n");
+    console.log("\n🚀 Starting Database Seeding...\n");
 
-    // Step 1: Seed Role Permissions
-    console.log("Seeding Role Permissions...");
-    for (const rolePermission of ROLE_PERMISSIONS) {
-      await RolePermission.updateOne(
-        { role: rolePermission.role },
-        { $set: rolePermission },
-        { upsert: true },
-      );
-      console.log(`  ${rolePermission.role} permissions seeded`);
+    // Seed Roles
+    console.log("🔐 Seeding Roles...");
+    for (const role of ROLE_PERMISSIONS) {
+      await RolePermission.updateOne({ role: role.role }, role, {
+        upsert: true,
+      });
+      console.log(`   ✔ ${role.role}`);
     }
-    console.log("");
 
-    // Step 2: Seed Super Admin User
-    console.log("Seeding Super Admin User...");
-    const existingSuperAdmin = await User.findOne({ role: "SUPER_ADMIN" });
+    // SUPER ADMIN
+    console.log("\n👑 Seeding Super Admin...");
+    let superAdmin = await User.findOne({ role: "SUPER_ADMIN" });
 
-    if (existingSuperAdmin) {
-      console.log(
-        `  Super Admin already exists with email: ${existingSuperAdmin.email}`,
-      );
-      console.log("  Skipping super admin creation\n");
+    if (!superAdmin && SUPER_ADMIN_USER.email && SUPER_ADMIN_USER.password) {
+      superAdmin = await User.create(SUPER_ADMIN_USER);
+      console.log(`   ✔ Super Admin Created: ${superAdmin.email}`);
     } else {
-      const createdSuperAdmin = await User.create(SUPER_ADMIN_USER);
-      console.log(`  Super Admin created successfully`);
-      console.log(`     Email: ${createdSuperAdmin.email}`);
-      console.log(`     Name: ${createdSuperAdmin.name}`);
-      console.log(`     Phone: ${createdSuperAdmin.phone}`);
-      console.log(`     ClerkId: ${createdSuperAdmin.clerkId}`);
-      console.log(`     Created At: ${createdSuperAdmin.createdAt}\n`);
+      console.log("   ⚠ Super Admin already exists or env missing");
+    }
+
+    // ADMIN
+    console.log("\n🛡 Seeding Admin...");
+    let admin = await User.findOne({ role: "ADMIN" });
+
+    if (!admin && ADMIN_USER.email && ADMIN_USER.password) {
+      admin = await User.create(ADMIN_USER);
+      console.log(`   ✔ Admin Created: ${admin.email}`);
+    } else {
+      console.log("   ⚠ Admin already exists or env missing");
     }
 
     // Summary
-    console.log("Database seeding completed successfully!\n");
-    console.log("Summary:");
-    const roleCount = await RolePermission.countDocuments();
-    const userCount = await User.countDocuments();
-    console.log(`  Total Roles: ${roleCount}`);
-    console.log(`  Total Users: ${userCount}`);
-    console.log(`  Super Admin Exists: ${existingSuperAdmin ? "Yes" : "No"}\n`);
+    console.log("\n✅ SEED SUMMARY");
+    console.log("Roles:", await RolePermission.countDocuments());
+    console.log("Users:", await User.countDocuments());
+    console.log("Super Admin Exists:", superAdmin ? "YES" : "NO");
+    console.log("Admin Exists:", admin ? "YES" : "NO");
   } catch (err) {
-    console.error("Seeding failed:", err.message);
-    process.exit(1);
+    console.error("❌ Seed Failed:", err);
   } finally {
     await mongoose.disconnect();
-    console.log("MongoDB Connection Closed");
+    console.log("\n🔌 MongoDB Disconnected\n");
   }
 };
 
-// ===== RUN SEED =====
-connectDB().then(() => seedDatabase());
+// ================= RUN =================
+connectDB().then(seedDatabase);

@@ -1,24 +1,28 @@
 import { Router } from "express";
-import userRoutes from "./userRoutes.js";
-import productRoutes from "./productRoutes.js";
-import categoryRoutes from "./categoryRoutes.js";
-import cartRoutes from "./cartRoutes.js";
-import orderRoutes from "./orderRoutes.js";
-import reviewRoutes from "./reviewRoutes.js";
-import wishlistRoutes from "./wishlistRoutes.js";
-import paymentRoutes from "./paymentRoutes.js";
-import addressRoutes from "./addressRoutes.js";
-import couponRoutes from "./couponRoutes.js";
-import bannerRoutes from "./bannerRoutes.js";
-import offerRoutes from "./offerRoutes.js";
-import shipmentRoutes from "./shipmentRoutes.js";
-import supportTicketRoutes from "./supportTicketRoutes.js";
-import notificationRoutes from "./notificationRoutes.js";
-import newsletterRoutes from "./newsletterRoutes.js";
-import taxRoutes from "./taxRoutes.js";
-import rolePermissionRoutes from "./rolePermissionRoutes.js";
+import authRoutes from "./authRoutes";
+import userRoutes from "./userRoutes";
+import productRoutes from "./productRoutes";
+import categoryRoutes from "./categoryRoutes";
+import cartRoutes from "./cartRoutes";
+import orderRoutes from "./orderRoutes";
+import reviewRoutes from "./reviewRoutes";
+import wishlistRoutes from "./wishlistRoutes";
+import paymentRoutes from "./paymentRoutes";
+import addressRoutes from "./addressRoutes";
+import couponRoutes from "./couponRoutes";
+import bannerRoutes from "./bannerRoutes";
+import offerRoutes from "./offerRoutes";
+import shipmentRoutes from "./shipmentRoutes";
+import supportTicketRoutes from "./supportTicketRoutes";
+import notificationRoutes from "./notificationRoutes";
+import newsletterRoutes from "./newsletterRoutes";
+import taxRoutes from "./taxRoutes";
+import rolePermissionRoutes from "./rolePermissionRoutes";
 
 const router = Router();
+
+// Authentication routes (must come first, no auth required for register/login)
+router.use("/auth", authRoutes);
 
 // User routes
 router.use("/users", userRoutes);

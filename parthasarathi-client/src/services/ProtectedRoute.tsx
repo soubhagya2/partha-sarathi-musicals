@@ -1,106 +1,58 @@
 import { useEffect, useState, type ReactNode } from "react";
-import { useAuth, useUser } from "@clerk/clerk-react";
 import { Navigate, useLocation } from "react-router-dom";
+import { useAuthContext } from "../context/AuthContext";
 
 interface ProtectedRouteProps {
   children: ReactNode;
-  allowedRoles: string[];
+  allowedRoles?: string[];
+  redirectTo?: string;
 }
 
-const ProtectedRoute = ({ children, allowedRoles }: ProtectedRouteProps) => {
+const ProtectedRoute = ({
+  children,
+  allowedRoles,
+  redirectTo = "/login",
+}: ProtectedRouteProps) => {
   const location = useLocation();
-  const { isLoaded, isSignedIn, getToken } = useAuth();
-  const { user } = useUser();
+  const [isLoadingAuth, setIsLoadingAuth] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userRole, setUserRole] = useState<string | null>(null);
-  const [isLoadingRole, setIsLoadingRole] = useState(true);
-  const superAdminEmail = import.meta.env.VITE_SUPER_ADMIN_EMAIL;
+
+  const auth = useAuthContext();
 
   useEffect(() => {
-    let isMounted = true;
+    // Wait for our AuthContext to finish initial load
+    if (!auth) return;
+    if (!auth.isLoaded) return;
 
-    const loadRole = async () => {
-      if (!isSignedIn) {
-        if (isMounted) {
-          setUserRole(null);
-          setIsLoadingRole(false);
-        }
-        return;
-      }
+    setIsAuthenticated(!!auth.user);
+    setUserRole(auth.user?.role || null);
+    setIsLoadingAuth(false);
+  }, [auth]);
 
-      try {
-        const token = await getToken();
-        if (!token) {
-          if (isMounted) {
-            setUserRole(null);
-            setIsLoadingRole(false);
-          }
-          return;
-        }
+  if (isLoadingAuth) return null;
 
-        const apiUrl =
-          import.meta.env.VITE_API_URL || "http://localhost:5000/api";
-        const response = await fetch(`${apiUrl}/users/me`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        if (!response.ok) {
-          if (isMounted) {
-            setUserRole(null);
-            setIsLoadingRole(false);
-          }
-          return;
-        }
-
-        const data = await response.json();
-        if (isMounted) {
-          setUserRole(data?.user?.role ?? null);
-          setIsLoadingRole(false);
-        }
-      } catch {
-        if (isMounted) {
-          setUserRole(null);
-          setIsLoadingRole(false);
-        }
-      }
-    };
-
-    setIsLoadingRole(true);
-    loadRole();
-
-    return () => {
-      isMounted = false;
-    };
-  }, [getToken, isSignedIn]);
-
-  if (!isLoaded || isLoadingRole) {
-    return null;
-  }
-
-  if (!isSignedIn) {
-    // Redirect to the specific login page based on the path
+  if (!isAuthenticated) {
     const loginPath = location.pathname.startsWith("/super-admin")
       ? "/super-admin/login"
-      : "/admin/login";
+      : location.pathname.startsWith("/admin")
+        ? "/admin/login"
+        : redirectTo;
     return <Navigate to={loginPath} state={{ from: location }} replace />;
   }
 
-  // Fallback: if role lookup fails but this is the configured Super Admin account,
-  // still allow access to super-admin routes.
-  const isSuperAdminRoute = location.pathname.startsWith("/super-admin");
-  const currentEmail =
-    user?.primaryEmailAddress?.emailAddress ||
-    user?.emailAddresses?.[0]?.emailAddress;
-
-  if (
-    (!userRole || !allowedRoles.includes(userRole)) &&
-    !(
-      isSuperAdminRoute &&
-      superAdminEmail &&
-      currentEmail &&
-      currentEmail.toLowerCase() === superAdminEmail.toLowerCase()
-    )
-  ) {
-    return <Navigate to="/" replace />;
+  if (allowedRoles && allowedRoles.length > 0) {
+    if (!userRole)
+      return <Navigate to={redirectTo} state={{ from: location }} replace />;
+    if (!allowedRoles.includes(userRole)) {
+      if (userRole === "SUPER_ADMIN")
+        return <Navigate to="/super-admin/dashboard" replace />;
+      if (userRole === "ADMIN")
+        return <Navigate to="/admin/dashboard" replace />;
+      if (userRole === "SUPPORT")
+        return <Navigate to="/support/dashboard" replace />;
+      return <Navigate to="/" replace />;
+    }
   }
 
   return <>{children}</>;

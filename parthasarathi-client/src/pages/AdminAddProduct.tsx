@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { Helmet } from "react-helmet-async";
+import Head from "../components/Head";
 
 export default function AdminAddProduct() {
   const navigate = useNavigate();
@@ -26,9 +26,7 @@ export default function AdminAddProduct() {
 
   return (
     <div className="max-w-2xl mx-auto p-8">
-      <Helmet>
-        <title>Add Product - Admin</title>
-      </Helmet>
+      <Head title="Add Product - Admin" />
       <h1 className="text-3xl font-bold mb-8">Add New Product</h1>
       <form
         onSubmit={handleSubmit}

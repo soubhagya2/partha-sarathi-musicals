@@ -1,5 +1,5 @@
 import { Router, Response } from "express";
-import { authMiddleware, AuthRequest } from "../middleware/auth.middleware.js";
+import { authMiddleware, AuthRequest } from "../middleware/authJWT.middleware";
 
 const wishlistRoutes = Router();
 

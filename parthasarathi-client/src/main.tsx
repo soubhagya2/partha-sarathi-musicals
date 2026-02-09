@@ -1,34 +1,18 @@
-import { StrictMode, type ReactNode } from "react";
+import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { BrowserRouter, useNavigate } from "react-router-dom";
-import { ClerkProvider } from "@clerk/clerk-react";
+import { BrowserRouter } from "react-router-dom";
+import { AuthProvider } from "./context/AuthContext";
+import { Toaster } from "sonner";
 import "./index.css";
 import App from "./App.tsx";
-
-const clerkPublishableKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
-if (!clerkPublishableKey) {
-  throw new Error("Missing VITE_CLERK_PUBLISHABLE_KEY");
-}
-
-const ClerkProviderWithRouter = ({ children }: { children: ReactNode }) => {
-  const navigate = useNavigate();
-
-  return (
-    <ClerkProvider
-      publishableKey={clerkPublishableKey}
-      navigate={(to) => navigate(to)}
-    >
-      {children}
-    </ClerkProvider>
-  );
-};
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
-      <ClerkProviderWithRouter>
+      <AuthProvider>
         <App />
-      </ClerkProviderWithRouter>
+        <Toaster position="top-right" />
+      </AuthProvider>
     </BrowserRouter>
   </StrictMode>,
 );
