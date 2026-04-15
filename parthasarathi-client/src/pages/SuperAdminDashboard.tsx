@@ -1,5 +1,4 @@
 import { useState, useEffect, useMemo } from "react";
-import { Helmet } from "react-helmet-async";
 import {
   ShieldAlert,
   Users,
@@ -145,9 +144,7 @@ const SuperAdminDashboard = () => {
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">
-      <Helmet>
         <title>Super Admin | Parthasarathi Musical</title>
-      </Helmet>
       <Header />
 
       <main className="flex-1 p-6 lg:p-12 max-w-7xl mx-auto w-full">

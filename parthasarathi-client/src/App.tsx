@@ -1,6 +1,5 @@
 import "./App.css";
 import { Routes, Route } from "react-router-dom";
-import { Helmet, HelmetProvider } from "react-helmet-async";
 import { Toaster } from "sonner";
 import Home from "./pages/Home";
 import About from "./pages/About";
@@ -37,10 +36,8 @@ import ProtectedRoute from "./services/ProtectedRoute";
 
 function App() {
   return (
-    <HelmetProvider>
-      <Helmet>
+    <div className="App">
         <title>Parthasarathi Musical - Home Page</title>
-      </Helmet>
       <ScrollToHash />
       <Routes>
         <Route path="/" element={<Home />} />
@@ -114,7 +111,7 @@ function App() {
         <Route path="*" element={<Home />} />
       </Routes>
       <Toaster position="top-center" richColors />
-    </HelmetProvider>
+    </div>
   );
 }
 

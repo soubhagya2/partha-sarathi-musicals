@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import { SignIn } from "@clerk/clerk-react";
 import { ShieldAlert } from "lucide-react";
 import Header from "../components/layout/Header";
 
@@ -27,11 +26,7 @@ const AdminLogin = () => {
               </div>
 
               <div className="flex justify-center">
-                <SignIn
-                  routing="path"
-                  path="/admin/login"
-                  forceRedirectUrl="/admin/dashboard"
-                />
+                
               </div>
 
               <div className="mt-6 text-center">

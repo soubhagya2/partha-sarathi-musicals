@@ -1,5 +1,6 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useAuth } from "../context/AuthContext";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Mail,
   Lock,
@@ -8,16 +9,27 @@ import {
   Eye,
   EyeOff,
   AlertCircle,
+  Loader2,
 } from "lucide-react";
 import Header from "../components/layout/Header";
 import Footer from "../components/layout/Footer";
 
 function Login() {
+  const { login, isAuthenticated } = useAuth();
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [errors, setErrors] = useState({ email: "", password: "" });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [serverError, setServerError] = useState("");
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/");
+    }
+  }, [isAuthenticated, navigate]);
 
   const validateForm = () => {
     const newErrors = { email: "", password: "" };
@@ -43,10 +55,20 @@ function Login() {
     return isValid;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setServerError("");
     if (validateForm()) {
-      console.log("Login attempt with:", { email, password, rememberMe });
+      setIsSubmitting(true);
+      try {
+        await login({ email, password });
+      } catch (err: any) {
+        setServerError(
+          err.message || "Login failed. Please check your credentials.",
+        );
+      } finally {
+        setIsSubmitting(false);
+      }
     }
   };
 
@@ -73,6 +95,13 @@ function Login() {
                       </p>
                     </div>
                   </div>
+
+                  {serverError && (
+                    <div className="mb-4 p-3 bg-red-50 border border-red-100 text-red-600 text-xs font-bold rounded-xl flex items-center gap-2">
+                      <AlertCircle className="size-4" />
+                      {serverError}
+                    </div>
+                  )}
 
                   <form onSubmit={handleSubmit} className="space-y-4">
                     {/* Email Field */}
@@ -114,7 +143,6 @@ function Login() {
                         </label>
                         <Link
                           to="/forgot-password"
-                          size-sm
                           className="text-[11px] font-bold text-orange-600 hover:text-orange-700 transition-colors"
                         >
                           Forgot?
@@ -175,10 +203,16 @@ function Login() {
 
                     <button
                       type="submit"
-                      className="w-full bg-amber-950 text-white py-3.5 rounded-xl font-bold text-sm hover:bg-orange-600 transition-all shadow-lg shadow-amber-950/20 active:scale-[0.98] flex items-center justify-center gap-2"
+                      disabled={isSubmitting}
+                      className="w-full bg-amber-950 text-white py-3.5 rounded-xl font-bold text-sm hover:bg-orange-600 transition-all shadow-lg shadow-amber-950/20 active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-70 disabled:active:scale-100"
                     >
-                      Sign In Account
-                      <ArrowRight className="size-4" />
+                      {isSubmitting ? (
+                        <Loader2 className="size-4 animate-spin" />
+                      ) : (
+                        <>
+                          Sign In Account <ArrowRight className="size-4" />
+                        </>
+                      )}
                     </button>
                   </form>
 

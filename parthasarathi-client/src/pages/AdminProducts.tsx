@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Helmet } from "react-helmet-async";
 import { adminService } from "../services/adminService";
 import { toast } from "sonner";
 
@@ -26,9 +25,7 @@ export default function AdminProducts() {
 
   return (
     <div className="p-8">
-      <Helmet>
         <title>Manage Products - Admin</title>
-      </Helmet>
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold">Manage Products</h1>
         <Link

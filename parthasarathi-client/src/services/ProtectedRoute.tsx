@@ -1,5 +1,4 @@
 import { useEffect, useState, type ReactNode } from "react";
-import { useAuth, useUser } from "@clerk/clerk-react";
 import { Navigate, useLocation } from "react-router-dom";
 
 interface ProtectedRouteProps {
@@ -9,17 +8,19 @@ interface ProtectedRouteProps {
 
 const ProtectedRoute = ({ children, allowedRoles }: ProtectedRouteProps) => {
   const location = useLocation();
-  const { isLoaded, isSignedIn, getToken } = useAuth();
-  const { user } = useUser();
+
   const [userRole, setUserRole] = useState<string | null>(null);
   const [isLoadingRole, setIsLoadingRole] = useState(true);
+
   const superAdminEmail = import.meta.env.VITE_SUPER_ADMIN_EMAIL;
+
+  const token = localStorage.getItem("token"); // 🔥 your JWT token
 
   useEffect(() => {
     let isMounted = true;
 
     const loadRole = async () => {
-      if (!isSignedIn) {
+      if (!token) {
         if (isMounted) {
           setUserRole(null);
           setIsLoadingRole(false);
@@ -28,30 +29,19 @@ const ProtectedRoute = ({ children, allowedRoles }: ProtectedRouteProps) => {
       }
 
       try {
-        const token = await getToken();
-        if (!token) {
-          if (isMounted) {
-            setUserRole(null);
-            setIsLoadingRole(false);
-          }
-          return;
-        }
-
         const apiUrl =
           import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+
         const response = await fetch(`${apiUrl}/users/me`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
         if (!response.ok) {
-          if (isMounted) {
-            setUserRole(null);
-            setIsLoadingRole(false);
-          }
-          return;
+          throw new Error("Unauthorized");
         }
 
         const data = await response.json();
+
         if (isMounted) {
           setUserRole(data?.user?.role ?? null);
           setIsLoadingRole(false);
@@ -64,42 +54,40 @@ const ProtectedRoute = ({ children, allowedRoles }: ProtectedRouteProps) => {
       }
     };
 
-    setIsLoadingRole(true);
     loadRole();
 
     return () => {
       isMounted = false;
     };
-  }, [getToken, isSignedIn]);
+  }, [token]);
 
-  if (!isLoaded || isLoadingRole) {
-    return null;
+  // 🔥 Loading state
+  if (isLoadingRole) {
+    return <div>Loading...</div>;
   }
 
-  if (!isSignedIn) {
-    // Redirect to the specific login page based on the path
+  // 🔥 Not logged in
+  if (!token) {
     const loginPath = location.pathname.startsWith("/super-admin")
       ? "/super-admin/login"
       : "/admin/login";
+
     return <Navigate to={loginPath} state={{ from: location }} replace />;
   }
 
-  // Fallback: if role lookup fails but this is the configured Super Admin account,
-  // still allow access to super-admin routes.
   const isSuperAdminRoute = location.pathname.startsWith("/super-admin");
-  const currentEmail =
-    user?.primaryEmailAddress?.emailAddress ||
-    user?.emailAddresses?.[0]?.emailAddress;
 
-  if (
-    (!userRole || !allowedRoles.includes(userRole)) &&
-    !(
-      isSuperAdminRoute &&
-      superAdminEmail &&
-      currentEmail &&
-      currentEmail.toLowerCase() === superAdminEmail.toLowerCase()
-    )
-  ) {
+  // 🔥 OPTIONAL: if your API returns email
+  const currentEmail = localStorage.getItem("email");
+
+  const isSuperAdmin =
+    isSuperAdminRoute &&
+    superAdminEmail &&
+    currentEmail &&
+    currentEmail.toLowerCase() === superAdminEmail.toLowerCase();
+
+  // 🔥 Role check
+  if (!userRole || (!allowedRoles.includes(userRole) && !isSuperAdmin)) {
     return <Navigate to="/" replace />;
   }
 

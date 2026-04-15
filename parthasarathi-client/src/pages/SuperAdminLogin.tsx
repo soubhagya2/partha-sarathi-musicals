@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import { SignIn } from "@clerk/clerk-react";
 import { ShieldAlert, Zap } from "lucide-react";
 import Header from "../components/layout/Header";
 
@@ -27,12 +26,7 @@ const SuperAdminLogin = () => {
               </div>
 
               <div className="flex justify-center">
-                <SignIn
-                  routing="path"
-                  path="/super-admin/login"
-                  forceRedirectUrl="/super-admin/dashboard"
-                  signUpUrl="/super-admin/register"
-                />
+                
               </div>
 
               <div className="mt-6 text-center">
